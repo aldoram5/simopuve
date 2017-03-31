@@ -13,8 +13,12 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.simopuve.model.PDVSurvey;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -26,6 +30,7 @@ public class RequestManager {
     private String TAG = RequestManager.class.getSimpleName();
 
     public static final String LOGIN_SERVICE_URL = "http://simopuve-aldoram5.rhcloud.com/rest/tests/login";
+    public static final String PDV_UPLOAD_SERVICE_URL = "http://simopuve-aldoram5.rhcloud.com/rest/tests/survey";
 
     ///Volley required
     private RequestQueue rq;
@@ -86,6 +91,33 @@ public class RequestManager {
                 listener.onFailure(error);
             }
         });
+        rq.add(jsonArrayRequest);
+    }
+
+    public void uploadPDV(PDVSurvey survey, final JSONObjectCallbackListener listener){
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setDateFormat("M/d/yy hh:mm a");
+        Gson gson = gsonBuilder.create();
+
+        JsonObjectRequest jsonArrayRequest = null;
+        Log.d(TAG, gson.toJson(survey));
+        try {
+            jsonArrayRequest = new JsonObjectRequest(Request.Method.POST, PDV_UPLOAD_SERVICE_URL,new JSONObject( gson.toJson(survey)), new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    Log.d(TAG, response.toString());
+                    listener.onSuccess(response);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e(TAG,error.toString());
+                    listener.onFailure(error);
+                }
+            });
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         rq.add(jsonArrayRequest);
     }
 }
