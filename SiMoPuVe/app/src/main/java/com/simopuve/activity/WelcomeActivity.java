@@ -52,7 +52,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(VolleyError error) {
-                        Log.d(TAG,error.getLocalizedMessage());
+                        Log.d(TAG,error.toString());
                     }
                 });
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)

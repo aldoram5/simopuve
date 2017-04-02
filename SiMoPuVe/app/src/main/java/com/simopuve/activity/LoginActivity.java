@@ -112,25 +112,11 @@ public class LoginActivity extends AppCompatActivity  {
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
+        } else if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError(getString(R.string.error_field_required));
+            focusView = mPasswordView;
             cancel = true;
         }
-        RequestManager.getInstance().authenticateUser(new RequestManager.JSONObjectCallbackListener() {
-            @Override
-            public void onSuccess(JSONObject response) {
-
-                Log.d(TAG,response.toString());
-                Intent intent = new Intent(LoginActivity.this,WelcomeActivity.class);
-                startActivity(intent);
-            }
-
-            @Override
-            public void onFailure(VolleyError error) {
-
-            }
-        });
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
@@ -139,6 +125,20 @@ public class LoginActivity extends AppCompatActivity  {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
+            RequestManager.getInstance().authenticateUser(new RequestManager.JSONObjectCallbackListener() {
+                @Override
+                public void onSuccess(JSONObject response) {
+
+                    Log.d(TAG,response.toString());
+                    Intent intent = new Intent(LoginActivity.this,WelcomeActivity.class);
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onFailure(VolleyError error) {
+
+                }
+            });
         }
     }
 
