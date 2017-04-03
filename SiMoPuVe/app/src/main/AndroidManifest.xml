@@ -28,7 +28,20 @@
         <activity
             android:name=".activity.WelcomeActivity"
             android:label="@string/title_activity_welcome"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.PDVRowListActivity"
+            android:label="@string/title_pdvrow_list"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".activity.PDVRowDetailActivity"
+            android:label="@string/title_pdvrow_detail"
+            android:parentActivityName=".activity.PDVRowListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.simopuve.activity.PDVRowListActivity" />
+        </activity>
     </application>
 
 </manifest>

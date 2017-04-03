@@ -1,5 +1,6 @@
 package com.simopuve.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,6 +12,13 @@ public class PDVSurvey {
     private List<PDVRow> rows;
 
     public PDVSurvey() {
+        rows= new ArrayList<>();
+        header = new PDVHeader();
+    }
+
+    public PDVSurvey(PDVHeader header, List<PDVRow> rows) {
+        this.header = header;
+        this.rows = rows;
     }
 
     public PDVHeader getHeader() {

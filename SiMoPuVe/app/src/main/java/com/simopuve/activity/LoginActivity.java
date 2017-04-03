@@ -130,7 +130,7 @@ public class LoginActivity extends AppCompatActivity  {
                 public void onSuccess(JSONObject response) {
 
                     Log.d(TAG,response.toString());
-                    Intent intent = new Intent(LoginActivity.this,WelcomeActivity.class);
+                    Intent intent = new Intent(LoginActivity.this,PDVRowListActivity.class);
                     startActivity(intent);
                 }
 

@@ -15,4 +15,6 @@
     </string>
     <string name="title_activity_welcome">SIMOPUVE</string>
     <string name="prompt_user">Usuario</string>
+    <string name="title_pdvrow_list">PDVRows</string>
+    <string name="title_pdvrow_detail">PDVRow Detail</string>
 </resources>

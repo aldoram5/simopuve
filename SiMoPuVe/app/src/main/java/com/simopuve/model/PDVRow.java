@@ -1,10 +1,14 @@
 package com.simopuve.model;
 
+import java.io.Serializable;
+
 /**
  * Created by aldorangel on 3/31/17.
  */
 
-public class PDVRow {
+public class PDVRow implements Serializable {
+
+
     private int rowNumber;
     private int personNumber;
     private String deviceBrand;
