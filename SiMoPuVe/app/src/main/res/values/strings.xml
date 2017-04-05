@@ -17,4 +17,41 @@
     <string name="prompt_user">Usuario</string>
     <string name="title_pdvrow_list">PDVRows</string>
     <string name="title_pdvrow_detail">PDVRow Detail</string>
+    <string name="save">Guardar</string>
+    <string name="company_change_reason_string">Motivo cambio de compañia</string>
+    <string name="company_change_string">Cambio de compañia</string>
+    <string name="express_reload_value">Valor Recarga Express</string>
+    <string name="device_rating_string">Calificación Equipo</string>
+    <string name="plan_rating">Calificación Plan</string>
+    <string name="accesory">Accesorio</string>
+    <string name="chip">Chip</string>
+    <string name="card">Tarjeta</string>
+    <string name="other_purchases">Otras compras</string>
+    <string name="additional_features">Características adicionales</string>
+    <string name="device_mode_string">Modalidad del equipo</string>
+    <string name="contract_type_string">Tipo de contrato</string>
+    <string name="model">Modelo:</string>
+    <string name="brand">Marca:</string>
+    <string name="device">Equipo</string>
+    <string name="new_register">Nuevo Registro</string>
+    <string name="person_number_string">Persona número:</string>
+    <string-array name="rating_options">
+        <item>NO APLICA</item>
+        <item>NO CONTESTA ENCUESTA</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
+    <string-array name="carriers">
+    <item>Claro</item>
+    <item>Entel</item>
+    <item>Movistar</item>
+    <item>Vtr</item>
+    <item>Nextel</item>
+    <item>NO CAMBIA DE COMPAÑIA</item>
+</string-array>
 </resources>
