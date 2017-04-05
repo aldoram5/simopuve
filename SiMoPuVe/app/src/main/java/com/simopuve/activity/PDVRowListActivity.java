@@ -61,7 +61,7 @@ public class PDVRowListActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setTitle(getTitle());
         survey = new PDVSurvey();
-
+        //TODO Get from realm the saved rows and header
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

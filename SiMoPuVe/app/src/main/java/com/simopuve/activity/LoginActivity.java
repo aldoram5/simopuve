@@ -36,14 +36,6 @@ public class LoginActivity extends AppCompatActivity  {
      */
     private static final int REQUEST_READ_CONTACTS = 0;
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
-
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
@@ -142,9 +134,10 @@ public class LoginActivity extends AppCompatActivity  {
         }
     }
 
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
+    @Override
+    protected void onResume() {
+        super.onResume();
+        showProgress(false);
     }
 
     private boolean isPasswordValid(String password) {

@@ -10,6 +10,7 @@
     <string name="error_invalid_password">La contraseña es muy corta</string>
     <string name="error_incorrect_password">Contraseña incorrecta</string>
     <string name="error_field_required">Este campo no puede estar vacio</string>
+    <string name="error_field_number_required">Solo se deben ingresar números</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
