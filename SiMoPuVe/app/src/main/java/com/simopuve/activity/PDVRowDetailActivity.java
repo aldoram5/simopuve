@@ -25,16 +25,10 @@ public class PDVRowDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pdvrow_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
+        toolbar.setTitle("Nuevo registro");
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
@@ -55,8 +49,12 @@ public class PDVRowDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString("row",
-                    getIntent().getStringExtra("row"));
+            if(getIntent().getSerializableExtra("row") != null){
+
+                toolbar.setTitle("Modificar registro");
+            arguments.putSerializable("row",
+                    getIntent().getSerializableExtra("row"));
+            }
             PDVRowDetailFragment fragment = new PDVRowDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()

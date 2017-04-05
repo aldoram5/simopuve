@@ -38,6 +38,16 @@ public class PDVRowDetailFragment extends Fragment {
     public PDVRowDetailFragment() {
     }
 
+
+    public static PDVRowDetailFragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        PDVRowDetailFragment fragment = new PDVRowDetailFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     public static PDVRowDetailFragment newInstance(PDVRow row) {
 
         Bundle args = new Bundle();
@@ -64,6 +74,8 @@ public class PDVRowDetailFragment extends Fragment {
             if (appBarLayout != null) {
                 appBarLayout.setTitle(mItem.getDeviceModel());
             }
+        }else{
+            mItem = new PDVRow();
         }
     }
 
@@ -73,9 +85,10 @@ public class PDVRowDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.pdvrow_detail, container, false);
 
         // Show the dummy content as text in a TextView.
+        /*
         if (mItem != null) {
             ((TextView) rootView.findViewById(R.id.pdvrow_detail)).setText(mItem.getDeviceBrand());
-        }
+        }*/
 
         return rootView;
     }

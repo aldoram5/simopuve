@@ -12,7 +12,6 @@ import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +29,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.realm.RealmList;
 
 /**
  * An activity representing a list of PDVRows. This activity
@@ -68,7 +69,7 @@ public class PDVRowListActivity extends AppCompatActivity {
                 PDVHeader header = new PDVHeader("Lugar X", "Dirección prueba", "comuna X", 1, 1,2,null,"Pepe Peréz",0);
                 PDVRow row = new PDVRow(1,1,"","","","","",true,false,false,"","NO APLICA",0,"","");
                 PDVRow row2 = new PDVRow(2,1,"","","","","",true,false,false,"","NO APLICA",0,"","");
-                List<PDVRow> list = new ArrayList<PDVRow>();
+                RealmList<PDVRow> list = new RealmList<>();
                 list.add(row);
                 list.add(row2);
                 PDVSurvey survey = new PDVSurvey();
@@ -120,7 +121,19 @@ public class PDVRowListActivity extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.add_menu_item:
-                //newGame();
+                if (mTwoPane) {
+                    Bundle arguments = new Bundle();
+                    //arguments.putString(PDVRowDetailFragment.ARG_ITEM_ID, holder.mItem.id);
+                    PDVRowDetailFragment fragment = PDVRowDetailFragment.newInstance();
+                    fragment.setArguments(arguments);
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.pdvrow_detail_container, fragment)
+                            .commit();
+                } else {
+                    Context context = this;
+                    Intent intent = new Intent(context, PDVRowDetailActivity.class);
+                    context.startActivity(intent);
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

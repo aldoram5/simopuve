@@ -18,8 +18,8 @@ import com.simopuve.model.PDVSurvey;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+
+import io.realm.RealmList;
 
 public class WelcomeActivity extends AppCompatActivity {
     final String TAG = WelcomeActivity.class.getSimpleName();
@@ -38,7 +38,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 PDVHeader header = new PDVHeader("Lugar X", "Dirección prueba", "comuna X", 1, 1,2,null,"Pepe Peréz",0);
                 PDVRow row = new PDVRow(1,1,"","","","","",true,false,false,"","NO APLICA",0,"","");
                 PDVRow row2 = new PDVRow(2,1,"","","","","",true,false,false,"","NO APLICA",0,"","");
-                List<PDVRow> list = new ArrayList<PDVRow>();
+                RealmList<PDVRow> list = new RealmList();
                 list.add(row);
                 list.add(row2);
                 PDVSurvey survey = new PDVSurvey();

@@ -1,22 +1,24 @@
 package com.simopuve.model;
 
 import java.util.ArrayList;
-import java.util.List;
+
+import io.realm.RealmList;
+import io.realm.RealmObject;
 
 /**
  * Created by aldorangel on 3/30/17.
  */
 
-public class PDVSurvey {
+public class PDVSurvey extends RealmObject {
     private PDVHeader header;
-    private List<PDVRow> rows;
+    private RealmList<PDVRow> rows;
 
     public PDVSurvey() {
-        rows= new ArrayList<>();
+        rows= new RealmList<PDVRow>();
         header = new PDVHeader();
     }
 
-    public PDVSurvey(PDVHeader header, List<PDVRow> rows) {
+    public PDVSurvey(PDVHeader header, RealmList rows) {
         this.header = header;
         this.rows = rows;
     }
@@ -29,11 +31,11 @@ public class PDVSurvey {
         this.header = header;
     }
 
-    public List<PDVRow> getRows() {
+    public RealmList getRows() {
         return rows;
     }
 
-    public void setRows(List<PDVRow> rows) {
+    public void setRows(RealmList<PDVRow> rows) {
         this.rows = rows;
     }
 

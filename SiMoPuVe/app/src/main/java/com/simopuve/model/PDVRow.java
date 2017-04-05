@@ -2,11 +2,13 @@ package com.simopuve.model;
 
 import java.io.Serializable;
 
+import io.realm.RealmObject;
+
 /**
  * Created by aldorangel on 3/31/17.
  */
 
-public class PDVRow implements Serializable {
+public class PDVRow extends RealmObject implements Serializable {
 
 
     private int rowNumber;
@@ -26,6 +28,22 @@ public class PDVRow implements Serializable {
     private String portabilityChangeReason;
 
     public PDVRow() {
+        this.rowNumber = 0;
+        this.personNumber = 0;
+        this.deviceBrand = "";
+        this.deviceModel = "";
+        this.contractType = "";
+        this.deviceMode = "";
+        this.additionalCharacteristics = "";
+        this.boughtCard = false;
+        this.boughtChip = false;
+        this.boughtAccessory = false;
+        this.planRating = "";
+        this.deviceRating = "";
+        this.expressRefillValue = 0;
+        this.portabilityChange = "";
+        this.portabilityChangeReason = "";
+
     }
 
     public PDVRow(int rowNumber, int personNumber, String deviceBrand, String deviceModel, String contractType, String deviceMode, String additionalCharacteristics, boolean boughtCard, boolean boughtChip, boolean boughtAccessory, String planRating, String deviceRating, int expressRefillValue, String portabilityChange, String portabilityChangeReason) {
