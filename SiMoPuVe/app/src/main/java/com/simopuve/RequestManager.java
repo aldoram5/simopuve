@@ -87,7 +87,7 @@ public class RequestManager {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(TAG,error.getLocalizedMessage());
+                Log.e(TAG,error.toString());
                 listener.onFailure(error);
             }
         });

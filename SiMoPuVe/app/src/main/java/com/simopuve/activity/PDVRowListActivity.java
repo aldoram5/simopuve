@@ -21,6 +21,7 @@ import com.android.volley.VolleyError;
 import com.simopuve.R;
 
 import com.simopuve.RequestManager;
+import com.simopuve.SIMOPUVEApplication;
 import com.simopuve.model.PDVHeader;
 import com.simopuve.model.PDVRow;
 import com.simopuve.model.PDVSurvey;
@@ -30,7 +31,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
 import io.realm.RealmList;
+import io.realm.RealmResults;
 
 /**
  * An activity representing a list of PDVRows. This activity
@@ -48,7 +51,8 @@ public class PDVRowListActivity extends AppCompatActivity {
      * device.
      */
     private boolean mTwoPane;
-
+    private Realm realm;
+    private PDVRowViewAdapter adapter;
     private PDVSurvey survey;
 
     @Override
@@ -62,6 +66,18 @@ public class PDVRowListActivity extends AppCompatActivity {
         toolbar.setTitle(getTitle());
         survey = new PDVSurvey();
         //TODO Get from realm the saved rows and header
+        Realm.init(SIMOPUVEApplication.getAppContext());
+        realm = Realm.getDefaultInstance();
+        PDVHeader first = realm.where(PDVHeader.class).findFirst();
+        if(first != null){
+            survey.setHeader(first);
+        }
+        RealmResults<PDVRow> all = realm.where(PDVRow.class).findAll();
+        if(!all.isEmpty()){
+            RealmList rows = survey.getRows();
+            rows.addAll(all);
+            survey.setRows(rows);
+        }
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,6 +125,13 @@ public class PDVRowListActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        adapter.notifyDataSetChanged();
+
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
@@ -140,8 +163,14 @@ public class PDVRowListActivity extends AppCompatActivity {
         }
     }
 
+
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new PDVRowViewAdapter(survey.getRows()));
+        adapter = new PDVRowViewAdapter(survey.getRows());
+        recyclerView.setAdapter(adapter);
+    }
+
+    public void shouldNotifyDatasetChanged(){
+        adapter.notifyDataSetChanged();
     }
 
     public class PDVRowViewAdapter
@@ -165,7 +194,7 @@ public class PDVRowListActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
+        public void onBindViewHolder(final ViewHolder holder,final int position) {
             holder.mItem = mValues.get(position);
             holder.mContentView.setText("Persona número: " +mValues.get(position).getPersonNumber());
             //holder.mContentView.setText(mValues.get(position).content);
@@ -184,7 +213,7 @@ public class PDVRowListActivity extends AppCompatActivity {
                     } else {
                         Context context = v.getContext();
                         Intent intent = new Intent(context, PDVRowDetailActivity.class);
-                        intent.putExtra("row", holder.mItem);
+                        intent.putExtra("rowNumber", position);
 
                         context.startActivity(intent);
                     }

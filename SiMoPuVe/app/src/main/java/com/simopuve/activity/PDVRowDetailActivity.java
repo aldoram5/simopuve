@@ -11,6 +11,10 @@ import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
 import com.simopuve.R;
+import com.simopuve.SIMOPUVEApplication;
+import com.simopuve.model.PDVRow;
+
+import io.realm.Realm;
 
 /**
  * An activity representing a single PDVRow detail screen. This
@@ -49,13 +53,16 @@ public class PDVRowDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            if(getIntent().getSerializableExtra("row") != null){
+            PDVRowDetailFragment fragment;
+            if(getIntent().getIntExtra("rowNumber",-1) != -1){
 
                 toolbar.setTitle("Modificar registro");
-            arguments.putSerializable("row",
-                    getIntent().getSerializableExtra("row"));
+                Realm.init(SIMOPUVEApplication.getAppContext());
+                Realm.getDefaultInstance().where(PDVRow.class).findAll().get(getIntent().getIntExtra("rowNumber",0));
+                fragment = PDVRowDetailFragment.newInstance(Realm.getDefaultInstance().where(PDVRow.class).findAll().get(getIntent().getIntExtra("rowNumber",0)));
+            }else{
+            fragment = new PDVRowDetailFragment();
             }
-            PDVRowDetailFragment fragment = new PDVRowDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.pdvrow_detail_container, fragment)

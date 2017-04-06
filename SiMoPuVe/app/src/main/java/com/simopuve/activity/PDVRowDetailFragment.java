@@ -5,6 +5,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +15,13 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.simopuve.R;
+import com.simopuve.SIMOPUVEApplication;
 import com.simopuve.model.PDVRow;
+
+import io.realm.Realm;
 
 /**
  * A fragment representing a single PDVRow detail screen.
@@ -34,7 +39,7 @@ public class PDVRowDetailFragment extends Fragment {
     /**
      * The content this fragment is presenting.
      */
-    private PDVRow row;
+    private PDVRow row = null;
 
     private EditText personNumberEditText;
     private EditText deviceBrandEditText;
@@ -50,6 +55,8 @@ public class PDVRowDetailFragment extends Fragment {
     private EditText reloadValueEditText;
     private EditText carrierChangeReasonEditText;
     private EditText carrierChangedFromToEditText;
+
+    private Realm realm;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -73,6 +80,7 @@ public class PDVRowDetailFragment extends Fragment {
         Bundle args = new Bundle();
 
         PDVRowDetailFragment fragment = new PDVRowDetailFragment();
+        fragment.row = row;
         args.putSerializable("row",row);
         fragment.setArguments(args);
         return fragment;
@@ -82,7 +90,9 @@ public class PDVRowDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Realm.init(SIMOPUVEApplication.getAppContext());
+        realm = Realm.getDefaultInstance();
+        Log.d("KEBOLAS","wtf ? : " + getArguments().containsKey("row"));
         if (getArguments().containsKey("row")) {
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
@@ -94,7 +104,7 @@ public class PDVRowDetailFragment extends Fragment {
             if (appBarLayout != null) {
                 appBarLayout.setTitle(row.getDeviceModel());
             }
-        }else{
+        }else if (row == null){
             row = new PDVRow();
         }
     }
@@ -105,7 +115,7 @@ public class PDVRowDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.pdvrow_detail, container, false);
 
         TextView title = (TextView)rootView.findViewById(R.id.title);
-        title.setText(getArguments().containsKey("row") ? "Modificar registro":"Nuevo Registro" );
+        title.setText(getArguments().containsKey("row") || row.getPersonNumber() > 0 ? "Modificar registro":"Nuevo Registro" );
         personNumberEditText  = (EditText) rootView.findViewById(R.id.person_number);
         deviceBrandEditText = (EditText) rootView.findViewById(R.id.device_brand);
         deviceModelEditText = (EditText) rootView.findViewById(R.id.device_model);
@@ -165,6 +175,19 @@ public class PDVRowDetailFragment extends Fragment {
         View focusView = null;
 
         String personNumber = personNumberEditText.getText().toString();
+        String deviceBrand = deviceBrandEditText.getText().toString();
+        String deviceModel = deviceModelEditText.getText().toString();
+        String deviceMode = deviceModeEditText.getText().toString();
+        String contractType = contractTypeEditText.getText().toString();
+        String additionalFeatures = additionalFeaturesEditText.getText().toString();
+        String realoadValue = reloadValueEditText.getText().toString();
+        String carrierChangedFromTo = carrierChangedFromToEditText.getText().toString();
+        String carrierChangeReason = carrierChangeReasonEditText.getText().toString();
+        boolean purchasedCard =  purchasedCardCheckBox.isSelected();
+        boolean purchasedAccesory = purchasedAccessoryCheckBox.isSelected();
+        boolean purchasedChip  = purchasedChipCheckBox.isSelected();
+        String planRating = getResources().getStringArray(R.array.rating_options)[planRatingSpinner.getSelectedItemPosition()];
+        String deviceRating = getResources().getStringArray(R.array.rating_options)[deviceRatingSpinner.getSelectedItemPosition()];
         if (TextUtils.isEmpty(personNumber)) {
             personNumberEditText.setError(getString(R.string.error_field_required));
             focusView = personNumberEditText;
@@ -180,7 +203,32 @@ public class PDVRowDetailFragment extends Fragment {
             // form field with an error.
             focusView.requestFocus();
         } else {
-            //TODO save the row
+            realm.beginTransaction();
+            row.setAdditionalCharacteristics(additionalFeatures);
+            row.setBoughtAccessory(purchasedAccesory);
+            row.setBoughtCard(purchasedCard);
+            row.setBoughtChip(purchasedChip);
+            row.setPlanRating(planRating);
+            row.setContractType(contractType);
+            row.setDeviceBrand(deviceBrand);
+            row.setDeviceMode(deviceMode);
+            row.setDeviceModel(deviceModel);
+            row.setDeviceRating(deviceRating);
+            row.setExpressRefillValue(Integer.parseInt(personNumber));
+            row.setPersonNumber(Integer.parseInt(personNumber));
+            row.setPortabilityChange(carrierChangedFromTo);
+            row.setPortabilityChangeReason(carrierChangeReason);
+            if (!getArguments().containsKey("row")){
+                realm.copyToRealm(row);
+            }
+
+            realm.commitTransaction();
+            Toast.makeText(getContext(), "Se agrego correctamente el registro", Toast.LENGTH_SHORT).show();
+            if(getActivity() instanceof PDVRowListActivity){
+                ((PDVRowListActivity)getActivity()).shouldNotifyDatasetChanged();
+            }
+
+
         }
     }
 }
