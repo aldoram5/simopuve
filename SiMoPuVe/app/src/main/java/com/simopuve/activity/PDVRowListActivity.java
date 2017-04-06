@@ -83,11 +83,14 @@ public class PDVRowListActivity extends AppCompatActivity {
             @Override
             public void onClick(final View view) {
                 PDVHeader header = new PDVHeader("Lugar X", "Dirección prueba", "comuna X", 1, 1,2,null,"Pepe Peréz",0);
-                PDVRow row = new PDVRow(1,1,"","","","","",true,false,false,"","NO APLICA",0,"","");
+                PDVRow row = new PDVRow(1,1,"hhu","","","","",true,false,false,"","NO APLICA",0,"","");
                 PDVRow row2 = new PDVRow(2,1,"","","","","",true,false,false,"","NO APLICA",0,"","");
                 RealmList<PDVRow> list = new RealmList<>();
-                list.add(row);
-                list.add(row2);
+                list.add((PDVRow) realm.copyFromRealm(survey.getRows().first()));
+                for (int i = 0; i < survey.getRows().size(); i++) {
+                    list.add((PDVRow) realm.copyFromRealm(survey.getRows().get(i)));
+                }
+                //list.add(row2);
                 PDVSurvey survey = new PDVSurvey();
                 survey.setHeader(header);
                 survey.setRows(list);
