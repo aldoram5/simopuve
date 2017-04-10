@@ -55,6 +55,10 @@ public class HeaderCreatorActivity extends AppCompatActivity {
         peopleDeclinedEditText = (EditText) findViewById(R.id.people_declined);
         peopleWithBagsEditText = (EditText) findViewById(R.id.people_bags);
 
+        if(id != null && !id.isEmpty()){
+            pointOfSaleEditText.setEnabled(false);
+        }
+
         pointOfSaleEditText.setText(header.getPointOfSaleName());
         addressEditText.setText(header.getAddress());
         locationEditText.setText(header.getComuna());

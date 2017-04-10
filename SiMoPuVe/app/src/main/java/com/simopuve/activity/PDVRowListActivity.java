@@ -88,7 +88,7 @@ public class PDVRowListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                PDVHeader header = new PDVHeader("Lugar X", "Dirección prueba", "comuna X", 1, 1,2,null,"Pepe Peréz",0);
+                PDVHeader header = realm.copyFromRealm(survey.getHeader());
                 RealmList<PDVRow> list = new RealmList<>();
                 list.add((PDVRow) realm.copyFromRealm(survey.getRows().first()));
                 for (int i = 0; i < survey.getRows().size(); i++) {
@@ -165,6 +165,14 @@ public class PDVRowListActivity extends AppCompatActivity {
                     intent.putExtra("position",position);
                     context.startActivity(intent);
                 }
+                return true;
+            case R.id.edit_header_menu_item:
+                Context context = this;
+
+                Intent intent = new Intent(context,HeaderCreatorActivity.class);
+                intent.putExtra("id",survey.getHeader().getPointOfSaleName());
+                startActivity(intent);
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

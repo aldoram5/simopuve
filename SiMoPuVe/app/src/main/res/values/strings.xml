@@ -44,6 +44,8 @@
     <string name="number_of_people_pm">Nº de personas de 14:00 a 21:00</string>
     <string name="number_of_people_with_bags">Nº Personas que sale con bolsas</string>
     <string name="number_of_people_who_declined_the_survey">Nº Personas que rechazaron la encuesta</string>
+    <string name="add_person">Agregar persona</string>
+    <string name="edit_people_info">Editar información</string>
     <string-array name="rating_options">
         <item>NO APLICA</item>
         <item>NO CONTESTA ENCUESTA</item>

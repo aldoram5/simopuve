@@ -15,11 +15,19 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import com.simopuve.model.PDVSurvey;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.lang.reflect.Type;
+import java.util.Date;
 
 /**
  * Created by aldorangel on 3/29/17.
@@ -96,7 +104,21 @@ public class RequestManager {
 
     public void uploadPDV(PDVSurvey survey, final JSONObjectCallbackListener listener){
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setDateFormat("M/d/yy hh:mm a");
+        //gsonBuilder.setDateFormat("M/d/yy hh:mm a");
+        gsonBuilder.registerTypeAdapter(java.util.Date.class, new JsonSerializer<Date>() {
+            @Override
+            public JsonElement serialize(java.util.Date src, Type typeOfSrc, JsonSerializationContext context) {
+                return new JsonPrimitive(src.getTime());
+            }
+        });
+
+        gsonBuilder.registerTypeAdapter(java.util.Date.class, new JsonDeserializer<Date>() {
+            @Override
+            public java.util.Date deserialize(com.google.gson.JsonElement p1, java.lang.reflect.Type p2,
+                                              com.google.gson.JsonDeserializationContext p3) {
+                return new java.util.Date(p1.getAsLong());
+            }
+        });
         Gson gson = gsonBuilder.create();
 
         JsonObjectRequest jsonArrayRequest = null;

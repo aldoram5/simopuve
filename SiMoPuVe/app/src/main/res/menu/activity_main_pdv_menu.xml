@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="Agregar persona"
+    <item android:title="@string/add_person"
         android:id="@+id/add_menu_item"
+        android:icon="@android:drawable/btn_plus"></item>
+    <item android:title="@string/edit_people_info"
+        android:id="@+id/edit_header_menu_item"
         android:icon="@android:drawable/btn_plus"></item>
 </menu>
