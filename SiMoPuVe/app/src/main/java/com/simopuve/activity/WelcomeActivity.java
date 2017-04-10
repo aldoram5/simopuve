@@ -62,7 +62,6 @@ public class WelcomeActivity extends AppCompatActivity {
             rows.addAll(headersResult);
             headers = rows;
         }
-        Log.d(TAG,headers.size()+" objetos header en la lista");
         View recyclerView = findViewById(R.id.pdvrow_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
@@ -73,6 +72,15 @@ public class WelcomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Realm.init(SIMOPUVEApplication.getAppContext());
+        realm = Realm.getDefaultInstance();
+        RealmResults<PDVHeader> headersResult = realm.where(PDVHeader.class).findAll();
+        if(!headersResult.isEmpty()){
+            headers.clear();
+            RealmList rows = headers;
+            rows.addAll(headersResult);
+            headers = rows;
+        }
         adapter.notifyDataSetChanged();
 
     }
@@ -120,7 +128,6 @@ public class WelcomeActivity extends AppCompatActivity {
                     Intent intent = new Intent(context, PDVRowListActivity.class);
                     intent.putExtra("pointOfSale", holder.mItem.getPointOfSaleName());
                     intent.putExtra("position", position);
-                    Log.d(TAG,"Position of Header element: "+position);
                     context.startActivity(intent);
 
                 }

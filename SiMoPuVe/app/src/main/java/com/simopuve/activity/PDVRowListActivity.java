@@ -64,7 +64,6 @@ public class PDVRowListActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        Log.d(TAG,getIntent().getStringExtra("pointOfSale"));
         toolbar.setTitle(getIntent().getStringExtra("pointOfSale"));
         survey = new PDVSurvey();
         Realm.init(SIMOPUVEApplication.getAppContext());
@@ -75,13 +74,11 @@ public class PDVRowListActivity extends AppCompatActivity {
             survey.setHeader(first);
         }
         position = getIntent().getIntExtra("position", 0);
-        Log.d(TAG,"Position of header: " + position);
         RealmResults<PDVRow> all = realm.where(PDVRow.class).equalTo("rowNumber",position).findAll();
         if(!all.isEmpty()){
             RealmList rows = survey.getRows();
             rows.addAll(all);
             survey.setRows(rows);
-            Log.d(TAG,"Rows: " + survey.getRows().size());
 
         }
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -94,7 +91,6 @@ public class PDVRowListActivity extends AppCompatActivity {
                 for (int i = 0; i < survey.getRows().size(); i++) {
                     list.add((PDVRow) realm.copyFromRealm(survey.getRows().get(i)));
                 }
-                //list.add(row2);
                 PDVSurvey survey = new PDVSurvey();
                 survey.setHeader(header);
                 survey.setRows(list);
@@ -134,6 +130,14 @@ public class PDVRowListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        RealmResults<PDVRow> all = realm.where(PDVRow.class).equalTo("rowNumber",position).findAll();
+        if(!all.isEmpty()){
+            survey.getRows().clear();
+            RealmList rows = survey.getRows();
+            rows.addAll(all);
+            survey.setRows(rows);
+
+        }
         adapter.notifyDataSetChanged();
 
     }
@@ -186,6 +190,13 @@ public class PDVRowListActivity extends AppCompatActivity {
     }
 
     public void shouldNotifyDatasetChanged(){
+        RealmResults<PDVRow> all = realm.where(PDVRow.class).equalTo("rowNumber",position).findAll();
+        if(!all.isEmpty()){
+            RealmList rows = survey.getRows();
+            rows.addAll(all);
+            survey.setRows(rows);
+
+        }
         adapter.notifyDataSetChanged();
     }
 

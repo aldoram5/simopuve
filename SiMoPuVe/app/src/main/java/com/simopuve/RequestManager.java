@@ -104,7 +104,6 @@ public class RequestManager {
 
     public void uploadPDV(PDVSurvey survey, final JSONObjectCallbackListener listener){
         GsonBuilder gsonBuilder = new GsonBuilder();
-        //gsonBuilder.setDateFormat("M/d/yy hh:mm a");
         gsonBuilder.registerTypeAdapter(java.util.Date.class, new JsonSerializer<Date>() {
             @Override
             public JsonElement serialize(java.util.Date src, Type typeOfSrc, JsonSerializationContext context) {

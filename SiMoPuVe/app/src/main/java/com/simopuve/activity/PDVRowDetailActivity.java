@@ -62,7 +62,6 @@ public class PDVRowDetailActivity extends AppCompatActivity {
                 Realm.getDefaultInstance().where(PDVRow.class).findAll().get(getIntent().getIntExtra("rowNumber",0));
                 fragment = PDVRowDetailFragment.newInstance(Realm.getDefaultInstance().where(PDVRow.class).equalTo("rowNumber",getIntent().getIntExtra("position",-1)).findAll().get(getIntent().getIntExtra("rowNumber",0)),getIntent().getIntExtra("position",0),getIntent().getIntExtra("rowNumber",0));
             }else{
-                Log.d("RowDetailActivity","Position Header sent to fragment: " + getIntent().getIntExtra("position",0));
             fragment = PDVRowDetailFragment.newInstance(getIntent().getIntExtra("position",0));
             }
             //fragment.setArguments(arguments);

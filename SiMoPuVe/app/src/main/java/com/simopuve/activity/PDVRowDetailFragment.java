@@ -74,7 +74,6 @@ public class PDVRowDetailFragment extends Fragment {
         Bundle args = new Bundle();
 
         PDVRowDetailFragment fragment = new PDVRowDetailFragment();
-        Log.d("PDVROWFragment","position factory creator: " + position);
         args.putInt("position",position);
         fragment.setArguments(args);
         return fragment;
@@ -102,7 +101,6 @@ public class PDVRowDetailFragment extends Fragment {
         realm = Realm.getDefaultInstance();
         position = getArguments().getInt("position");
 
-        Log.d("PDVROWFragment","position onCreate2: " + position);
         if (getArguments().containsKey("rowNumber")) {
             //row = (PDVRow) getArguments().getSerializable("row");
             position = getArguments().getInt("position");
@@ -117,7 +115,6 @@ public class PDVRowDetailFragment extends Fragment {
         }else if (row == null){
             row = new PDVRow();
         }
-        Log.d(TAG,"Position of Header that will contain this row: "+position );
     }
 
     @Override
@@ -151,9 +148,11 @@ public class PDVRowDetailFragment extends Fragment {
         reloadValueEditText.setText(String.valueOf(row.getExpressRefillValue()));
         carrierChangedFromToEditText.setText(row.getPortabilityChange());
         carrierChangeReasonEditText.setText(row.getPortabilityChangeReason());
-        purchasedCardCheckBox.setSelected(row.isBoughtCard());
-        purchasedAccessoryCheckBox.setSelected(row.isBoughtAccessory());
-        purchasedChipCheckBox.setSelected(row.isBoughtChip());
+        Log.d(TAG,"bought card : " + row.isBoughtCard());
+        purchasedCardCheckBox.setChecked(row.isBoughtCard());
+        Log.d(TAG,"bought card : " + purchasedCardCheckBox.isChecked());
+        purchasedAccessoryCheckBox.setChecked(row.isBoughtAccessory());
+        purchasedChipCheckBox.setChecked(row.isBoughtChip());
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getContext(),
                 R.array.rating_options, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -194,9 +193,9 @@ public class PDVRowDetailFragment extends Fragment {
         String realoadValue = reloadValueEditText.getText().toString();
         String carrierChangedFromTo = carrierChangedFromToEditText.getText().toString();
         String carrierChangeReason = carrierChangeReasonEditText.getText().toString();
-        boolean purchasedCard =  purchasedCardCheckBox.isSelected();
-        boolean purchasedAccesory = purchasedAccessoryCheckBox.isSelected();
-        boolean purchasedChip  = purchasedChipCheckBox.isSelected();
+        boolean purchasedCard =  purchasedCardCheckBox.isChecked();
+        boolean purchasedAccesory = purchasedAccessoryCheckBox.isChecked();
+        boolean purchasedChip  = purchasedChipCheckBox.isChecked();
         String planRating = getResources().getStringArray(R.array.rating_options)[planRatingSpinner.getSelectedItemPosition()];
         String deviceRating = getResources().getStringArray(R.array.rating_options)[deviceRatingSpinner.getSelectedItemPosition()];
         if (TextUtils.isEmpty(personNumber)) {
