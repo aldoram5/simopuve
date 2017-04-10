@@ -3,12 +3,14 @@ package com.simopuve.model;
 import java.util.Date;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by aldorangel on 3/31/17.
  */
 
 public class PDVHeader extends RealmObject {
+    @PrimaryKey
     private String pointOfSaleName;
     private String address;
     private String comuna;

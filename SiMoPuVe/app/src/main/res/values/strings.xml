@@ -14,7 +14,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="title_activity_welcome">SIMOPUVE</string>
+    <string name="title_activity_welcome">Encuestas Activas</string>
     <string name="prompt_user">Usuario</string>
     <string name="title_pdvrow_list">PDVRows</string>
     <string name="title_pdvrow_detail">PDVRow Detail</string>
@@ -36,6 +36,14 @@
     <string name="device">Equipo</string>
     <string name="new_register">Nuevo Registro</string>
     <string name="person_number_string">Persona número:</string>
+    <string name="address">Dirección</string>
+    <string name="sale_point">Punto de venta</string>
+    <string name="location">Comuna</string>
+    <string name="survey_date">Fecha de la encuesta</string>
+    <string name="number_of_people_am">Nº de personas de 10:00 a 13:00</string>
+    <string name="number_of_people_pm">Nº de personas de 14:00 a 21:00</string>
+    <string name="number_of_people_with_bags">Nº Personas que sale con bolsas</string>
+    <string name="number_of_people_who_declined_the_survey">Nº Personas que rechazaron la encuesta</string>
     <string-array name="rating_options">
         <item>NO APLICA</item>
         <item>NO CONTESTA ENCUESTA</item>
@@ -48,11 +56,11 @@
         <item>7</item>
     </string-array>
     <string-array name="carriers">
-    <item>Claro</item>
-    <item>Entel</item>
-    <item>Movistar</item>
-    <item>Vtr</item>
-    <item>Nextel</item>
-    <item>NO CAMBIA DE COMPAÑIA</item>
-</string-array>
+        <item>Claro</item>
+        <item>Entel</item>
+        <item>Movistar</item>
+        <item>Vtr</item>
+        <item>Nextel</item>
+        <item>NO CAMBIA DE COMPAÑIA</item>
+    </string-array>
 </resources>

@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Build;
@@ -23,6 +24,7 @@ import com.android.volley.VolleyError;
 import com.simopuve.R;
 import com.simopuve.RequestManager;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -120,9 +122,17 @@ public class LoginActivity extends AppCompatActivity  {
             RequestManager.getInstance().authenticateUser(new RequestManager.JSONObjectCallbackListener() {
                 @Override
                 public void onSuccess(JSONObject response) {
-
+                    try {
+                        String completeName = response.getString("completeName");
+                        SharedPreferences prefs = getSharedPreferences("SIMOPUVE", MODE_PRIVATE);
+                        SharedPreferences.Editor e = prefs.edit();
+                        e.putString("completeName", completeName);
+                        e.commit();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     Log.d(TAG,response.toString());
-                    Intent intent = new Intent(LoginActivity.this,PDVRowListActivity.class);
+                    Intent intent = new Intent(LoginActivity.this,WelcomeActivity.class);
                     startActivity(intent);
                 }
 

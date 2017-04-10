@@ -54,6 +54,7 @@ public class PDVRowListActivity extends AppCompatActivity {
     private Realm realm;
     private PDVRowViewAdapter adapter;
     private PDVSurvey survey;
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,28 +64,31 @@ public class PDVRowListActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        toolbar.setTitle(getTitle());
+        Log.d(TAG,getIntent().getStringExtra("pointOfSale"));
+        toolbar.setTitle(getIntent().getStringExtra("pointOfSale"));
         survey = new PDVSurvey();
-        //TODO Get from realm the saved rows and header
         Realm.init(SIMOPUVEApplication.getAppContext());
         realm = Realm.getDefaultInstance();
-        PDVHeader first = realm.where(PDVHeader.class).findFirst();
+
+        PDVHeader first = realm.where(PDVHeader.class).equalTo("pointOfSaleName",getIntent().getStringExtra("pointOfSale")).findFirst();
         if(first != null){
             survey.setHeader(first);
         }
-        RealmResults<PDVRow> all = realm.where(PDVRow.class).findAll();
+        position = getIntent().getIntExtra("position", 0);
+        Log.d(TAG,"Position of header: " + position);
+        RealmResults<PDVRow> all = realm.where(PDVRow.class).equalTo("rowNumber",position).findAll();
         if(!all.isEmpty()){
             RealmList rows = survey.getRows();
             rows.addAll(all);
             survey.setRows(rows);
+            Log.d(TAG,"Rows: " + survey.getRows().size());
+
         }
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
                 PDVHeader header = new PDVHeader("Lugar X", "Dirección prueba", "comuna X", 1, 1,2,null,"Pepe Peréz",0);
-                PDVRow row = new PDVRow(1,1,"hhu","","","","",true,false,false,"","NO APLICA",0,"","");
-                PDVRow row2 = new PDVRow(2,1,"","","","","",true,false,false,"","NO APLICA",0,"","");
                 RealmList<PDVRow> list = new RealmList<>();
                 list.add((PDVRow) realm.copyFromRealm(survey.getRows().first()));
                 for (int i = 0; i < survey.getRows().size(); i++) {
@@ -150,7 +154,7 @@ public class PDVRowListActivity extends AppCompatActivity {
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
                     //arguments.putString(PDVRowDetailFragment.ARG_ITEM_ID, holder.mItem.id);
-                    PDVRowDetailFragment fragment = PDVRowDetailFragment.newInstance();
+                    PDVRowDetailFragment fragment = PDVRowDetailFragment.newInstance(position);
                     fragment.setArguments(arguments);
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.pdvrow_detail_container, fragment)
@@ -158,6 +162,7 @@ public class PDVRowListActivity extends AppCompatActivity {
                 } else {
                     Context context = this;
                     Intent intent = new Intent(context, PDVRowDetailActivity.class);
+                    intent.putExtra("position",position);
                     context.startActivity(intent);
                 }
                 return true;
@@ -197,9 +202,9 @@ public class PDVRowListActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder,final int position) {
-            holder.mItem = mValues.get(position);
-            holder.mContentView.setText("Persona número: " +mValues.get(position).getPersonNumber());
+        public void onBindViewHolder(final ViewHolder holder,final int pos) {
+            holder.mItem = mValues.get(pos);
+            holder.mContentView.setText("Persona número: " +mValues.get(pos).getPersonNumber());
             //holder.mContentView.setText(mValues.get(position).content);
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -208,7 +213,7 @@ public class PDVRowListActivity extends AppCompatActivity {
                     if (mTwoPane) {
                         Bundle arguments = new Bundle();
                         //arguments.putString(PDVRowDetailFragment.ARG_ITEM_ID, holder.mItem.id);
-                        PDVRowDetailFragment fragment = PDVRowDetailFragment.newInstance(holder.mItem);
+                        PDVRowDetailFragment fragment = PDVRowDetailFragment.newInstance(holder.mItem,position,pos);
                         fragment.setArguments(arguments);
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.pdvrow_detail_container, fragment)
@@ -216,7 +221,8 @@ public class PDVRowListActivity extends AppCompatActivity {
                     } else {
                         Context context = v.getContext();
                         Intent intent = new Intent(context, PDVRowDetailActivity.class);
-                        intent.putExtra("rowNumber", position);
+                        intent.putExtra("rowNumber", pos);
+                        intent.putExtra("position", position);
 
                         context.startActivity(intent);
                     }

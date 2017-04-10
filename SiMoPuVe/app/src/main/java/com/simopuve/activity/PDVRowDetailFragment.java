@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.simopuve.R;
 import com.simopuve.SIMOPUVEApplication;
+import com.simopuve.model.PDVHeader;
 import com.simopuve.model.PDVRow;
 
 import io.realm.Realm;
@@ -34,7 +35,7 @@ public class PDVRowDetailFragment extends Fragment {
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
-    public static final String ARG_ITEM_ID = "item_id";
+    public final String TAG = PDVRowDetailFragment.class.getSimpleName();
 
     /**
      * The content this fragment is presenting.
@@ -58,6 +59,8 @@ public class PDVRowDetailFragment extends Fragment {
 
     private Realm realm;
 
+    private int position;
+    private int rowNumber;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -66,22 +69,26 @@ public class PDVRowDetailFragment extends Fragment {
     }
 
 
-    public static PDVRowDetailFragment newInstance() {
+    public static PDVRowDetailFragment newInstance(int position) {
 
         Bundle args = new Bundle();
 
         PDVRowDetailFragment fragment = new PDVRowDetailFragment();
+        Log.d("PDVROWFragment","position factory creator: " + position);
+        args.putInt("position",position);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public static PDVRowDetailFragment newInstance(PDVRow row) {
+    public static PDVRowDetailFragment newInstance(PDVRow row, int position,int rowNumber) {
 
         Bundle args = new Bundle();
 
         PDVRowDetailFragment fragment = new PDVRowDetailFragment();
         fragment.row = row;
-        args.putSerializable("row",row);
+        args.putInt("position",position);
+        args.putInt("rowNumber",rowNumber);
+        //args.putSerializable("row",row);
         fragment.setArguments(args);
         return fragment;
     }
@@ -90,14 +97,17 @@ public class PDVRowDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         Realm.init(SIMOPUVEApplication.getAppContext());
         realm = Realm.getDefaultInstance();
-        Log.d("KEBOLAS","wtf ? : " + getArguments().containsKey("row"));
-        if (getArguments().containsKey("row")) {
-            // Load the dummy content specified by the fragment
-            // arguments. In a real-world scenario, use a Loader
-            // to load content from a content provider.
-            row = (PDVRow) getArguments().getSerializable("row");
+        position = getArguments().getInt("position");
+
+        Log.d("PDVROWFragment","position onCreate2: " + position);
+        if (getArguments().containsKey("rowNumber")) {
+            //row = (PDVRow) getArguments().getSerializable("row");
+            position = getArguments().getInt("position");
+            rowNumber = getArguments().getInt("rowNumber");
+            row = realm.where(PDVRow.class).equalTo("rowNumber",position).findAll().get(rowNumber);
 
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
@@ -107,6 +117,7 @@ public class PDVRowDetailFragment extends Fragment {
         }else if (row == null){
             row = new PDVRow();
         }
+        Log.d(TAG,"Position of Header that will contain this row: "+position );
     }
 
     @Override
@@ -205,6 +216,7 @@ public class PDVRowDetailFragment extends Fragment {
         } else {
             realm.beginTransaction();
             row.setAdditionalCharacteristics(additionalFeatures);
+            row.setRowNumber(position);
             row.setBoughtAccessory(purchasedAccesory);
             row.setBoughtCard(purchasedCard);
             row.setBoughtChip(purchasedChip);

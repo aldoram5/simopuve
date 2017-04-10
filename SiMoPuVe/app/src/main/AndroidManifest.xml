@@ -32,18 +32,19 @@
         <activity
             android:name=".activity.PDVRowListActivity"
             android:label="@string/title_pdvrow_list"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.PDVRowDetailActivity"
             android:label="@string/title_pdvrow_detail"
-            android:windowSoftInputMode="adjustPan"
             android:parentActivityName=".activity.PDVRowListActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.simopuve.activity.PDVRowListActivity" />
         </activity>
+        <activity android:name=".activity.HeaderCreatorActivity"></activity>
     </application>
 
 </manifest>

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
@@ -54,16 +55,17 @@ public class PDVRowDetailActivity extends AppCompatActivity {
             // using a fragment transaction.
             Bundle arguments = new Bundle();
             PDVRowDetailFragment fragment;
-            if(getIntent().getIntExtra("rowNumber",-1) != -1){
+            if(getIntent().getIntExtra("rowNumber",-1) != -1 && getIntent().getIntExtra("position",-1) != -1 ){
 
                 toolbar.setTitle("Modificar registro");
                 Realm.init(SIMOPUVEApplication.getAppContext());
                 Realm.getDefaultInstance().where(PDVRow.class).findAll().get(getIntent().getIntExtra("rowNumber",0));
-                fragment = PDVRowDetailFragment.newInstance(Realm.getDefaultInstance().where(PDVRow.class).findAll().get(getIntent().getIntExtra("rowNumber",0)));
+                fragment = PDVRowDetailFragment.newInstance(Realm.getDefaultInstance().where(PDVRow.class).equalTo("rowNumber",getIntent().getIntExtra("position",-1)).findAll().get(getIntent().getIntExtra("rowNumber",0)),getIntent().getIntExtra("position",0),getIntent().getIntExtra("rowNumber",0));
             }else{
-            fragment = new PDVRowDetailFragment();
+                Log.d("RowDetailActivity","Position Header sent to fragment: " + getIntent().getIntExtra("position",0));
+            fragment = PDVRowDetailFragment.newInstance(getIntent().getIntExtra("position",0));
             }
-            fragment.setArguments(arguments);
+            //fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.pdvrow_detail_container, fragment)
                     .commit();
