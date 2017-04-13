@@ -2,6 +2,7 @@ package com.simopuve;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Base64;
 import android.util.Log;
 import android.util.LruCache;
 
@@ -28,6 +29,8 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by aldorangel on 3/29/17.
@@ -35,6 +38,7 @@ import java.util.Date;
 
 public class RequestManager {
 
+    public static final String SIMOPUVE_AUTHORIZED_USER_AGENT = "SIMOPUVE-USERAGENT-SIMOPUVE";
     private String TAG = RequestManager.class.getSimpleName();
 
     public static final String LOGIN_SERVICE_URL = "http://simopuve-aldoram5.rhcloud.com/rest/tests/login";
@@ -85,7 +89,7 @@ public class RequestManager {
         return mImageLoader;
     }
 
-    public void authenticateUser(final JSONObjectCallbackListener listener){
+    public void authenticateUser(final String userName,final  String password, final JSONObjectCallbackListener listener){
         JsonObjectRequest jsonArrayRequest = new JsonObjectRequest(Request.Method.POST, LOGIN_SERVICE_URL, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -98,11 +102,21 @@ public class RequestManager {
                 Log.e(TAG,error.toString());
                 listener.onFailure(error);
             }
-        });
+        }){
+            @Override
+            public Map<String, String> getHeaders(){
+                Map<String, String> headers = new HashMap<String, String>();
+                String credentials = "5"+userName+".:."+password+"3";
+                String auth = "Basic "
+                        + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                headers.put("User-agent", SIMOPUVE_AUTHORIZED_USER_AGENT);
+                return headers;
+            }
+        };
         rq.add(jsonArrayRequest);
     }
 
-    public void uploadPDV(PDVSurvey survey, final JSONObjectCallbackListener listener){
+    public void uploadPDV(PDVSurvey survey,final String userName, final JSONObjectCallbackListener listener){
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(java.util.Date.class, new JsonSerializer<Date>() {
             @Override
@@ -135,7 +149,17 @@ public class RequestManager {
                     Log.e(TAG,error.toString());
                     listener.onFailure(error);
                 }
-            });
+            }){
+                @Override
+                public Map<String, String> getHeaders(){
+                    Map<String, String> headers = new HashMap<String, String>();
+                    String credentials = "5"+userName+".:.";
+                    String auth = "Basic "
+                            + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                    headers.put("User-agent", "SIMOPUVE-Authorized-Request");
+                    return headers;
+                }
+            };
         } catch (JSONException e) {
             e.printStackTrace();
         }

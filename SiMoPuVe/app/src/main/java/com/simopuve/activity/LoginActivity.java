@@ -88,7 +88,7 @@ public class LoginActivity extends AppCompatActivity  {
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
+        String userName = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
@@ -102,7 +102,7 @@ public class LoginActivity extends AppCompatActivity  {
         }
 
         // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
+        if (TextUtils.isEmpty(userName)) {
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
@@ -119,7 +119,7 @@ public class LoginActivity extends AppCompatActivity  {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            RequestManager.getInstance().authenticateUser(new RequestManager.JSONObjectCallbackListener() {
+            RequestManager.getInstance().authenticateUser(userName,password,new RequestManager.JSONObjectCallbackListener() {
                 @Override
                 public void onSuccess(JSONObject response) {
                     try {

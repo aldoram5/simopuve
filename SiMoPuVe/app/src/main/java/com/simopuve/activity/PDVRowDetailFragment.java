@@ -148,9 +148,7 @@ public class PDVRowDetailFragment extends Fragment {
         reloadValueEditText.setText(String.valueOf(row.getExpressRefillValue()));
         carrierChangedFromToEditText.setText(row.getPortabilityChange());
         carrierChangeReasonEditText.setText(row.getPortabilityChangeReason());
-        Log.d(TAG,"bought card : " + row.isBoughtCard());
         purchasedCardCheckBox.setChecked(row.isBoughtCard());
-        Log.d(TAG,"bought card : " + purchasedCardCheckBox.isChecked());
         purchasedAccessoryCheckBox.setChecked(row.isBoughtAccessory());
         purchasedChipCheckBox.setChecked(row.isBoughtChip());
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getContext(),

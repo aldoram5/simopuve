@@ -1,9 +1,11 @@
 package com.simopuve.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -85,30 +87,43 @@ public class PDVRowListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                PDVHeader header = realm.copyFromRealm(survey.getHeader());
-                RealmList<PDVRow> list = new RealmList<>();
-                list.add((PDVRow) realm.copyFromRealm(survey.getRows().first()));
-                for (int i = 0; i < survey.getRows().size(); i++) {
-                    list.add((PDVRow) realm.copyFromRealm(survey.getRows().get(i)));
-                }
-                PDVSurvey survey = new PDVSurvey();
-                survey.setHeader(header);
-                survey.setRows(list);
-                RequestManager.getInstance().uploadPDV(survey, new RequestManager.JSONObjectCallbackListener() {
-                    @Override
-                    public void onSuccess(JSONObject response) {
-                        Log.d(TAG,response.toString());
-                        Snackbar.make(view, "Exito al mandar la encuesta", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
-                    }
 
-                    @Override
-                    public void onFailure(VolleyError error) {
-                        Log.d(TAG,error.toString());
-                        Snackbar.make(view, "Error al mandar la encuesta", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
-                    }
-                });
+                new AlertDialog.Builder(PDVRowListActivity.this)
+                        .setTitle("Enviar encuesta")
+                        .setMessage("Una vez enviada la encuesta esta se borrará de la memoria de la aplicación, ¿Desea Continuar?")
+                        .setNegativeButton(android.R.string.cancel, null) // dismisses by default
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override public void onClick(DialogInterface dialog, int which) {
+                                // do the acknowledged action, beware, this is run on UI thread
+
+                                PDVHeader header = realm.copyFromRealm(survey.getHeader());
+                                RealmList<PDVRow> list = new RealmList<>();
+                                list.add((PDVRow) realm.copyFromRealm(survey.getRows().first()));
+                                for (int i = 0; i < survey.getRows().size(); i++) {
+                                    list.add((PDVRow) realm.copyFromRealm(survey.getRows().get(i)));
+                                }
+                                PDVSurvey survey = new PDVSurvey();
+                                survey.setHeader(header);
+                                survey.setRows(list);
+                                RequestManager.getInstance().uploadPDV(survey,getSharedPreferences("SIMOPUVE", MODE_PRIVATE).getString("completeName","Sin Nombre"), new RequestManager.JSONObjectCallbackListener() {
+                                    @Override
+                                    public void onSuccess(JSONObject response) {
+                                        Log.d(TAG,response.toString());
+                                        Snackbar.make(view, "Exito al mandar la encuesta", Snackbar.LENGTH_LONG)
+                                                .setAction("Action", null).show();
+                                    }
+
+                                    @Override
+                                    public void onFailure(VolleyError error) {
+                                        Log.d(TAG,error.toString());
+                                        Snackbar.make(view, "Error al mandar la encuesta", Snackbar.LENGTH_LONG)
+                                                .setAction("Action", null).show();
+                                    }
+                                });
+                            }
+                        })
+                        .create()
+                        .show();
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 //        .setAction("Action", null).show();
             }

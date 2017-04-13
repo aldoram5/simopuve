@@ -41,6 +41,7 @@ public class HeaderCreatorActivity extends AppCompatActivity {
         realm = Realm.getDefaultInstance();
         if(id != null && !id.isEmpty()){
 
+            getSupportActionBar().setTitle("Editar Información");
             Realm.init(SIMOPUVEApplication.getAppContext());
             header = Realm.getDefaultInstance().where(PDVHeader.class).equalTo("pointOfSaleName",id).findFirst();
         }else{

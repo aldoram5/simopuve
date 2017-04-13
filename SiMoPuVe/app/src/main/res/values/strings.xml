@@ -46,6 +46,7 @@
     <string name="number_of_people_who_declined_the_survey">Nº Personas que rechazaron la encuesta</string>
     <string name="add_person">Agregar persona</string>
     <string name="edit_people_info">Editar información</string>
+    <string name="create_survey">Crear Encuesta</string>
     <string-array name="rating_options">
         <item>NO APLICA</item>
         <item>NO CONTESTA ENCUESTA</item>
