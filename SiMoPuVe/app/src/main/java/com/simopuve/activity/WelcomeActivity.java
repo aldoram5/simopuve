@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.simopuve.R;
@@ -61,6 +62,9 @@ public class WelcomeActivity extends AppCompatActivity {
             RealmList rows = headers;
             rows.addAll(headersResult);
             headers = rows;
+        }else{
+
+            Toast.makeText(this, "No hay encuestas activas en este momento, crea una tocando el boton flotante", Toast.LENGTH_LONG).show();
         }
         View recyclerView = findViewById(R.id.pdvrow_list);
         assert recyclerView != null;

@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.simopuve.R;
@@ -82,6 +83,9 @@ public class PDVRowListActivity extends AppCompatActivity {
             rows.addAll(all);
             survey.setRows(rows);
 
+        }else{
+
+            Toast.makeText(this, "Esta encuesta se encuentra vacía, usa el menu en la parte superior derecha para agregar registros", Toast.LENGTH_LONG).show();
         }
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
