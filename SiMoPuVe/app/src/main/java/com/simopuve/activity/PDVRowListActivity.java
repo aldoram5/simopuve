@@ -171,10 +171,7 @@ public class PDVRowListActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.add_menu_item:
                 if (mTwoPane) {
-                    Bundle arguments = new Bundle();
-                    //arguments.putString(PDVRowDetailFragment.ARG_ITEM_ID, holder.mItem.id);
                     PDVRowDetailFragment fragment = PDVRowDetailFragment.newInstance(position);
-                    fragment.setArguments(arguments);
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.pdvrow_detail_container, fragment)
                             .commit();
