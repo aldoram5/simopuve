@@ -98,7 +98,6 @@ public class PDVRowListActivity extends AppCompatActivity {
 
                                 PDVHeader header = realm.copyFromRealm(survey.getHeader());
                                 RealmList<PDVRow> list = new RealmList<>();
-                                list.add((PDVRow) realm.copyFromRealm(survey.getRows().first()));
                                 for (int i = 0; i < survey.getRows().size(); i++) {
                                     list.add((PDVRow) realm.copyFromRealm(survey.getRows().get(i)));
                                 }
