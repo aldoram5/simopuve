@@ -245,10 +245,7 @@ public class PDVRowListActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     if (mTwoPane) {
-                        Bundle arguments = new Bundle();
-                        //arguments.putString(PDVRowDetailFragment.ARG_ITEM_ID, holder.mItem.id);
                         PDVRowDetailFragment fragment = PDVRowDetailFragment.newInstance(holder.mItem,position,pos);
-                        fragment.setArguments(arguments);
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.pdvrow_detail_container, fragment)
                                 .commit();
