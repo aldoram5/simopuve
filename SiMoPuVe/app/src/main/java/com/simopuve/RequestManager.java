@@ -110,6 +110,7 @@ public class RequestManager {
                 String auth = "Basic "
                         + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
                 headers.put("User-agent", SIMOPUVE_AUTHORIZED_USER_AGENT);
+                headers.put("Authorization", auth);
                 return headers;
             }
         };
@@ -157,6 +158,7 @@ public class RequestManager {
                     String auth = "Basic "
                             + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
                     headers.put("User-agent", "SIMOPUVE-Authorized-Request");
+                    headers.put("Authorization", auth);
                     return headers;
                 }
             };

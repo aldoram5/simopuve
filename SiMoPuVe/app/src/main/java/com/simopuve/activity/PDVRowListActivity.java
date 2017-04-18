@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.simopuve.R;
@@ -82,6 +83,9 @@ public class PDVRowListActivity extends AppCompatActivity {
             rows.addAll(all);
             survey.setRows(rows);
 
+        }else{
+
+            Toast.makeText(this, "Esta encuesta se encuentra vacía, usa el menu en la parte superior derecha para agregar registros", Toast.LENGTH_LONG).show();
         }
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -98,7 +102,6 @@ public class PDVRowListActivity extends AppCompatActivity {
 
                                 PDVHeader header = realm.copyFromRealm(survey.getHeader());
                                 RealmList<PDVRow> list = new RealmList<>();
-                                list.add((PDVRow) realm.copyFromRealm(survey.getRows().first()));
                                 for (int i = 0; i < survey.getRows().size(); i++) {
                                     list.add((PDVRow) realm.copyFromRealm(survey.getRows().get(i)));
                                 }
@@ -171,10 +174,7 @@ public class PDVRowListActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.add_menu_item:
                 if (mTwoPane) {
-                    Bundle arguments = new Bundle();
-                    //arguments.putString(PDVRowDetailFragment.ARG_ITEM_ID, holder.mItem.id);
                     PDVRowDetailFragment fragment = PDVRowDetailFragment.newInstance(position);
-                    fragment.setArguments(arguments);
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.pdvrow_detail_container, fragment)
                             .commit();
@@ -245,10 +245,7 @@ public class PDVRowListActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     if (mTwoPane) {
-                        Bundle arguments = new Bundle();
-                        //arguments.putString(PDVRowDetailFragment.ARG_ITEM_ID, holder.mItem.id);
                         PDVRowDetailFragment fragment = PDVRowDetailFragment.newInstance(holder.mItem,position,pos);
-                        fragment.setArguments(arguments);
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.pdvrow_detail_container, fragment)
                                 .commit();

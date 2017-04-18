@@ -53,7 +53,6 @@ public class PDVRowDetailActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
-            Bundle arguments = new Bundle();
             PDVRowDetailFragment fragment;
             if(getIntent().getIntExtra("rowNumber",-1) != -1 && getIntent().getIntExtra("position",-1) != -1 ){
 

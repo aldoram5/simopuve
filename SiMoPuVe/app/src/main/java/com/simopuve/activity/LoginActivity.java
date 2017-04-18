@@ -19,6 +19,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.simopuve.R;
@@ -139,6 +140,8 @@ public class LoginActivity extends AppCompatActivity  {
                 @Override
                 public void onFailure(VolleyError error) {
 
+                    showProgress(false);
+                    Toast.makeText(LoginActivity.this, "No se pudo ingresar al sistema, verifica que hayas ingresado correctamente tu usuario y contraseña y asegurate de tener acceso a Internet", Toast.LENGTH_LONG).show();
                 }
             });
         }

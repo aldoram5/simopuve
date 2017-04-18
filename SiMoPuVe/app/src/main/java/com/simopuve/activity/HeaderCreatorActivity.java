@@ -112,7 +112,6 @@ public class HeaderCreatorActivity extends AppCompatActivity {
             realm.beginTransaction();
             header.setAddress(address);
             header.setComuna(location);
-            header.setPointOfSaleName(pointOfSale);
             header.setCompleteName(getSharedPreferences("SIMOPUVE", MODE_PRIVATE).getString("completeName","Sin Nombre"));
             header.setNumberOfPeopleAM(Integer.parseInt(peopleAM));
             header.setNumberOfPeoplePM(Integer.parseInt(peoplePM));
@@ -120,6 +119,7 @@ public class HeaderCreatorActivity extends AppCompatActivity {
             header.setNumberOfPeopleDidNotAnswer(Integer.parseInt(peopleDeclined));
             header.setPeopleWithBags(Integer.parseInt(peopleWithBags));
             if (id == null || id.isEmpty()){
+                header.setPointOfSaleName(pointOfSale);
                 realm.copyToRealm(header);
             }
 
