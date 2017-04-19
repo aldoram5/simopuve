@@ -77,6 +77,22 @@ public class HeaderCreatorActivity extends AppCompatActivity {
         });
     }
 
+    public void addPersonAM(View view){
+        String peopleAM = peopleAMEditText.getText().toString();
+        peopleAMEditText.setText(String.valueOf(Integer.parseInt(peopleAM)+1));
+    }
+    public void addPersonPM(View view){
+        String peoplePM = peoplePMEditText.getText().toString();
+        peoplePMEditText.setText(String.valueOf(Integer.parseInt(peoplePM)+1));
+    }
+    public void addPersonWithBag(View view){
+        String peopleWithBags = peopleWithBagsEditText.getText().toString();
+        peopleWithBagsEditText.setText(String.valueOf(Integer.parseInt(peopleWithBags)+1));
+    }
+    public void addPersonDeclined(View view){
+        String peopleDeclined = peopleDeclinedEditText.getText().toString();
+        peopleDeclinedEditText.setText(String.valueOf(Integer.parseInt(peopleDeclined)+1));
+    }
 
     void validateFieldsAndSaveHeader(){
 
