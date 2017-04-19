@@ -27,7 +27,7 @@
             <EditText
                 android:id="@+id/sale_point"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:inputType="text"
                 android:hint="@string/sale_point" />
         </android.support.design.widget.TextInputLayout>
