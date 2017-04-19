@@ -114,6 +114,7 @@ public class PDVRowDetailFragment extends Fragment {
             }
         }else if (row == null){
             row = new PDVRow();
+            row.setPersonNumber((int) (realm.where(PDVRow.class).equalTo("rowNumber",position).count() + 1));
         }
     }
 
