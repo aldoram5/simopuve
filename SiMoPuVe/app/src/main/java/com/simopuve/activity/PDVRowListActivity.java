@@ -11,12 +11,15 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,6 +61,11 @@ public class PDVRowListActivity extends AppCompatActivity {
     private PDVRowViewAdapter adapter;
     private PDVSurvey survey;
     private int position;
+
+    private EditText peopleAMEditText;
+    private EditText peoplePMEditText;
+    private EditText peopleWithBagsEditText;
+    private EditText peopleDeclinedEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,7 +150,116 @@ public class PDVRowListActivity extends AppCompatActivity {
             // If this view is present, then the
             // activity should be in two-pane mode.
             mTwoPane = true;
+            peopleAMEditText = (EditText) findViewById(R.id.people_am);
+            peoplePMEditText = (EditText) findViewById(R.id.people_pm);
+            peopleDeclinedEditText = (EditText) findViewById(R.id.people_declined);
+            peopleWithBagsEditText = (EditText) findViewById(R.id.people_bags);
+            peopleAMEditText.setText(String.valueOf(survey.getHeader().getNumberOfPeopleAM()));
+            peoplePMEditText.setText(String.valueOf(survey.getHeader().getNumberOfPeoplePM()));
+            peopleDeclinedEditText.setText(String.valueOf(survey.getHeader().getNumberOfPeopleDidNotAnswer()));
+            peopleWithBagsEditText.setText(String.valueOf(survey.getHeader().getPeopleWithBags()));
+            peopleAMEditText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    realm.beginTransaction();
+                    survey.getHeader().setNumberOfPeopleAM(Integer.parseInt(peopleAMEditText.getText().toString()));
+                    realm.commitTransaction();
+                }
+            });
+            peoplePMEditText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    realm.beginTransaction();
+                    survey.getHeader().setNumberOfPeoplePM(Integer.parseInt(peoplePMEditText.getText().toString()));
+                    realm.commitTransaction();
+                }
+            });
+            peopleDeclinedEditText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    realm.beginTransaction();
+                    survey.getHeader().setNumberOfPeopleDidNotAnswer(Integer.parseInt(peopleDeclinedEditText.getText().toString()));
+                    realm.commitTransaction();
+                }
+            });
+            peopleWithBagsEditText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    realm.beginTransaction();
+                    survey.getHeader().setPeopleWithBags(Integer.parseInt(peopleWithBagsEditText.getText().toString()));
+                    realm.commitTransaction();
+                }
+            });
         }
+    }
+
+    public void addPersonAM(View view){
+        realm.beginTransaction();
+        survey.getHeader().setNumberOfPeopleAM(survey.getHeader().getNumberOfPeopleAM()+1);
+        realm.commitTransaction();
+        String peopleAM = peopleAMEditText.getText().toString();
+        peopleAMEditText.setText(String.valueOf(Integer.parseInt(peopleAM)+1));
+    }
+    public void addPersonPM(View view){
+        realm.beginTransaction();
+        survey.getHeader().setNumberOfPeoplePM(survey.getHeader().getNumberOfPeoplePM()+1);
+        realm.commitTransaction();
+        String peoplePM = peoplePMEditText.getText().toString();
+        peoplePMEditText.setText(String.valueOf(Integer.parseInt(peoplePM)+1));
+    }
+    public void addPersonWithBag(View view){
+        realm.beginTransaction();
+        survey.getHeader().setPeopleWithBags(survey.getHeader().getPeopleWithBags()+1);
+        realm.commitTransaction();
+        String peopleWithBags = peopleWithBagsEditText.getText().toString();
+        peopleWithBagsEditText.setText(String.valueOf(Integer.parseInt(peopleWithBags)+1));
+    }
+    public void addPersonDeclined(View view){
+        realm.beginTransaction();
+        survey.getHeader().setNumberOfPeopleDidNotAnswer(survey.getHeader().getNumberOfPeopleDidNotAnswer()+1);
+        realm.commitTransaction();
+        String peopleDeclined = peopleDeclinedEditText.getText().toString();
+        peopleDeclinedEditText.setText(String.valueOf(Integer.parseInt(peopleDeclined)+1));
     }
 
     @Override

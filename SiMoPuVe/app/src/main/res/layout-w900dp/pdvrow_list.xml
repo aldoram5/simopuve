@@ -1,10 +1,9 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
+    android:layout_marginRight="8dp"
     android:baselineAligned="false"
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="horizontal"
@@ -21,18 +20,161 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/pdvrow_list"
         android:name="com.simopuve.activity.PDVRowListFragment"
-        android:layout_width="@dimen/item_width"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_width="200dp"
+        android:layout_height="0dp"
         app:layoutManager="LinearLayoutManager"
         tools:context="com.simopuve.activity.PDVRowListActivity"
-        tools:listitem="@layout/pdvrow_list_content" />
+        tools:listitem="@layout/pdvrow_list_content"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageButton
+        android:id="@+id/add_button"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:onClick="addPersonAM"
+        android:background="@color/transparent"
+        app:layout_constraintLeft_toRightOf="@id/textInputLayout13"
+        app:srcCompat="@android:drawable/ic_menu_add"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="22dp" />
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="371dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toRightOf="@+id/add_button"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:id="@+id/textInputLayout14"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/people_pm"
+            android:inputType="number"
+            android:layout_width="360dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="40dp"
+            android:hint="@string/number_of_people_pm" />
+    </android.support.design.widget.TextInputLayout>
+
+    <ImageButton
+        android:id="@+id/add_button_2"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="22dp"
+        android:onClick="addPersonPM"
+        android:background="@color/transparent"
+        app:layout_constraintLeft_toRightOf="@+id/textInputLayout14"
+        app:srcCompat="@android:drawable/ic_menu_add"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintTop_toTopOf="parent" />
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="309dp"
+        android:layout_height="52dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toRightOf="@id/pdvrow_list"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout14"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:id="@+id/textInputLayout15">
+
+        <EditText
+            android:id="@+id/people_bags"
+            android:layout_width="298dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:layout_marginRight="40dp"
+            android:hint="@string/number_of_people_with_bags" />
+    </android.support.design.widget.TextInputLayout>
+
+    <ImageButton
+        android:id="@+id/add_button_3"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="22dp"
+        android:onClick="addPersonWithBag"
+        android:background="@color/transparent"
+        app:layout_constraintLeft_toRightOf="@id/textInputLayout15"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout14"
+        app:srcCompat="@android:drawable/ic_menu_add" />
+
+    <ImageButton
+        android:id="@+id/add_button_4"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="22dp"
+        android:background="@color/transparent"
+        app:layout_constraintLeft_toRightOf="@id/textInputLayout16"
+        android:onClick="addPersonDeclined"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout14"
+        app:srcCompat="@android:drawable/ic_menu_add" />
 
     <FrameLayout
         android:id="@+id/pdvrow_detail_container"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="3" />
+        android:layout_height="0dp"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="8dp"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout16"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintLeft_toRightOf="@+id/pdvrow_list" />
 
-</LinearLayout>
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textInputLayout13"
+        android:layout_width="309dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toRightOf="@id/pdvrow_list"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteY="5dp">
+
+        <EditText
+            android:id="@+id/people_am"
+            android:layout_width="286dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="40dp"
+            android:hint="@string/number_of_people_am"
+            android:inputType="number" />
+
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textInputLayout16"
+        android:layout_width="371dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintLeft_toRightOf="@+id/add_button_3"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout14">
+
+        <EditText
+            android:id="@+id/people_declined"
+            android:layout_width="360dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="40dp"
+            android:hint="@string/number_of_people_who_declined_the_survey"
+            android:inputType="number" />
+    </android.support.design.widget.TextInputLayout>
+
+</android.support.constraint.ConstraintLayout>
