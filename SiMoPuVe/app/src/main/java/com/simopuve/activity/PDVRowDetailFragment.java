@@ -197,6 +197,7 @@ public class PDVRowDetailFragment extends Fragment {
         boolean purchasedChip  = purchasedChipCheckBox.isChecked();
         String planRating = getResources().getStringArray(R.array.rating_options)[planRatingSpinner.getSelectedItemPosition()];
         String deviceRating = getResources().getStringArray(R.array.rating_options)[deviceRatingSpinner.getSelectedItemPosition()];
+        //TODO Validate here the row info
         if (TextUtils.isEmpty(personNumber)) {
             personNumberEditText.setError(getString(R.string.error_field_required));
             focusView = personNumberEditText;
@@ -208,8 +209,7 @@ public class PDVRowDetailFragment extends Fragment {
         }
 
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
+            // There was an error; don't attempt to save the data and give focus to the view that needs it
             focusView.requestFocus();
         } else {
             realm.beginTransaction();

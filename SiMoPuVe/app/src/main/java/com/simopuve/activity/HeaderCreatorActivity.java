@@ -95,7 +95,7 @@ public class HeaderCreatorActivity extends AppCompatActivity {
     }
 
     void validateFieldsAndSaveHeader(){
-
+        //TODO Add validations if any to the header creator
         boolean cancel = false;
         View focusView = null;
 
