@@ -5,11 +5,11 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import com.simopuve.R;
 import com.simopuve.SIMOPUVEApplication;
-import com.simopuve.model.PDVHeader;
 import com.simopuve.model.PDVRow;
 
 import io.realm.Realm;
@@ -43,8 +42,8 @@ public class PDVRowDetailFragment extends Fragment {
     private PDVRow row = null;
 
     private EditText personNumberEditText;
-    private EditText deviceBrandEditText;
-    private EditText deviceModelEditText;
+    private AutoCompleteTextView deviceBrandEditText;
+    private AutoCompleteTextView deviceModelEditText;
     private EditText deviceModeEditText;
     private EditText contractTypeEditText;
     private EditText additionalFeaturesEditText;
@@ -92,6 +91,12 @@ public class PDVRowDetailFragment extends Fragment {
         return fragment;
     }
 
+    private static final String[] BRANDS = new String[] {
+            "Motorola", "Nokia", "Apple", "Samsung", "Asus"
+    };
+        private static final String[] MODELS = new String[] {
+            "moto-g", "moto-x", "moto-z", "moto-a", "moto-e"
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -126,8 +131,8 @@ public class PDVRowDetailFragment extends Fragment {
         TextView title = (TextView)rootView.findViewById(R.id.title);
         title.setText(getArguments().containsKey("row") || row.getPersonNumber() > 0 ? "Modificar registro":"Nuevo Registro" );
         personNumberEditText  = (EditText) rootView.findViewById(R.id.person_number);
-        deviceBrandEditText = (EditText) rootView.findViewById(R.id.device_brand);
-        deviceModelEditText = (EditText) rootView.findViewById(R.id.device_model);
+        deviceBrandEditText = (AutoCompleteTextView) rootView.findViewById(R.id.device_brand);
+        deviceModelEditText = (AutoCompleteTextView) rootView.findViewById(R.id.device_model);
         deviceModeEditText = (EditText) rootView.findViewById(R.id.device_mode);
         contractTypeEditText = (EditText) rootView.findViewById(R.id.contract_type);
         additionalFeaturesEditText = (EditText) rootView.findViewById(R.id.additional_features);
@@ -139,6 +144,14 @@ public class PDVRowDetailFragment extends Fragment {
         purchasedCardCheckBox = (CheckBox) rootView.findViewById(R.id.bought_card_checkbox);
         deviceRatingSpinner = (Spinner) rootView.findViewById(R.id.rate_device_spinner);
         planRatingSpinner = (Spinner) rootView.findViewById(R.id.rate_plan_spinner);
+
+        ArrayAdapter<String> brands = new ArrayAdapter<String>(this.getContext(),
+                android.R.layout.simple_dropdown_item_1line, BRANDS);
+
+        ArrayAdapter<String> models = new ArrayAdapter<String>(this.getContext(),
+                android.R.layout.simple_dropdown_item_1line, MODELS);
+        deviceBrandEditText.setAdapter(brands);
+        deviceModelEditText.setAdapter(models);
 
         personNumberEditText.setText(String.valueOf(row.getPersonNumber()));
         deviceBrandEditText.setText(row.getDeviceBrand());
@@ -240,5 +253,6 @@ public class PDVRowDetailFragment extends Fragment {
 
 
         }
+
     }
 }

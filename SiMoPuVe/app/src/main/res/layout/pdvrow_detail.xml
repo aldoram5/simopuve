@@ -74,11 +74,12 @@
             android:layout_marginEnd="8dp"
             android:id="@+id/textInputLayout2">
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/device_brand"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
+                android:maxLines="1"
                 android:hint="@string/brand" />
         </android.support.design.widget.TextInputLayout>
 
@@ -95,11 +96,12 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp">
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/device_model"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
+                android:maxLines="1"
                 android:hint="@string/model" />
         </android.support.design.widget.TextInputLayout>
 
