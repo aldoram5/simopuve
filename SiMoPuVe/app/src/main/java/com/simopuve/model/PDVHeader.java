@@ -20,6 +20,7 @@ public class PDVHeader extends RealmObject {
     private Date surveyDate;
     private String completeName;
     private int numberOfPeopleDidNotAnswer;
+    private boolean mall;
 
     public PDVHeader() {
     }
@@ -34,6 +35,27 @@ public class PDVHeader extends RealmObject {
         this.surveyDate = surveyDate;
         this.completeName = completeName;
         this.numberOfPeopleDidNotAnswer = numberOfPeopleDidNotAnswer;
+    }
+
+    public PDVHeader(String pointOfSaleName, String address, String comuna, int numberOfPeopleAM, int numberOfPeoplePM, int peopleWithBags, Date surveyDate, String completeName, int numberOfPeopleDidNotAnswer, boolean mall) {
+        this.pointOfSaleName = pointOfSaleName;
+        this.address = address;
+        this.comuna = comuna;
+        this.numberOfPeopleAM = numberOfPeopleAM;
+        this.numberOfPeoplePM = numberOfPeoplePM;
+        this.peopleWithBags = peopleWithBags;
+        this.surveyDate = surveyDate;
+        this.completeName = completeName;
+        this.numberOfPeopleDidNotAnswer = numberOfPeopleDidNotAnswer;
+        this.mall = mall;
+    }
+
+    public boolean isMall() {
+        return mall;
+    }
+
+    public void setMall(boolean mall) {
+        this.mall = mall;
     }
 
     public int getNumberOfPeopleDidNotAnswer() {

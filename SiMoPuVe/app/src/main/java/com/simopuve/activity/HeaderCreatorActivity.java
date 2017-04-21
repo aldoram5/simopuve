@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ public class HeaderCreatorActivity extends AppCompatActivity {
     private EditText addressEditText;
     private EditText locationEditText;
     private EditText surveyDateEditText;
+    private CheckBox mallCheckBox;
     private EditText peopleAMEditText;
     private EditText peoplePMEditText;
     private EditText peopleWithBagsEditText;
@@ -51,6 +53,7 @@ public class HeaderCreatorActivity extends AppCompatActivity {
         addressEditText = (EditText) findViewById(R.id.address);
         locationEditText = (EditText) findViewById(R.id.location);
         surveyDateEditText = (EditText) findViewById(R.id.survey_date);
+        mallCheckBox = (CheckBox) findViewById(R.id.mall_checkbox);
         peopleAMEditText = (EditText) findViewById(R.id.people_am);
         peoplePMEditText = (EditText) findViewById(R.id.people_pm);
         peopleDeclinedEditText = (EditText) findViewById(R.id.people_declined);
@@ -67,6 +70,7 @@ public class HeaderCreatorActivity extends AppCompatActivity {
         peoplePMEditText.setText(String.valueOf(header.getNumberOfPeoplePM()));
         peopleDeclinedEditText.setText(String.valueOf(header.getNumberOfPeopleDidNotAnswer()));
         peopleWithBagsEditText.setText(String.valueOf(header.getPeopleWithBags()));
+        mallCheckBox.setChecked(header.isMall());
 
         Button saveButton = (Button) findViewById(R.id.save_button);
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -134,6 +138,7 @@ public class HeaderCreatorActivity extends AppCompatActivity {
             header.setSurveyDate(new Date());
             header.setNumberOfPeopleDidNotAnswer(Integer.parseInt(peopleDeclined));
             header.setPeopleWithBags(Integer.parseInt(peopleWithBags));
+            header.setMall(mallCheckBox.isChecked());
             if (id == null || id.isEmpty()){
                 header.setPointOfSaleName(pointOfSale);
                 realm.copyToRealm(header);

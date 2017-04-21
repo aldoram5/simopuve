@@ -234,11 +234,23 @@
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="250dp"
             android:layout_height="50dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="60dp"
             android:text="@string/save"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout16" />
+
+        <CheckBox
+            android:id="@+id/mall_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout16"
+            android:text="Es un Mall"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="446dp" />
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>
