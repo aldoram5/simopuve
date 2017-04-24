@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -17,9 +18,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.simopuve.R;
+import com.simopuve.RequestManager;
 import com.simopuve.SIMOPUVEApplication;
 import com.simopuve.model.PDVRow;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import io.realm.Realm;
 
@@ -55,6 +61,9 @@ public class PDVRowDetailFragment extends Fragment {
     private EditText reloadValueEditText;
     private EditText carrierChangeReasonEditText;
     private EditText carrierChangedFromToEditText;
+    private ArrayAdapter<String> brands;
+    private ArrayAdapter<String> models;
+    private JSONArray brandsAndDevices = null;
 
     private Realm realm;
 
@@ -91,10 +100,10 @@ public class PDVRowDetailFragment extends Fragment {
         return fragment;
     }
 
-    private static final String[] BRANDS = new String[] {
+    private String[] brandsStringArray = new String[] {
             "Motorola", "Nokia", "Apple", "Samsung", "Asus"
     };
-        private static final String[] MODELS = new String[] {
+    private String[] modelsStringArray = new String[] {
             "moto-g", "moto-x", "moto-z", "moto-a", "moto-e"
     };
 
@@ -145,12 +154,33 @@ public class PDVRowDetailFragment extends Fragment {
         deviceRatingSpinner = (Spinner) rootView.findViewById(R.id.rate_device_spinner);
         planRatingSpinner = (Spinner) rootView.findViewById(R.id.rate_plan_spinner);
 
-        ArrayAdapter<String> brands = new ArrayAdapter<String>(this.getContext(),
-                android.R.layout.simple_dropdown_item_1line, BRANDS);
+        brands = new ArrayAdapter<String>(this.getContext(),
+                android.R.layout.simple_dropdown_item_1line, brandsStringArray);
 
-        ArrayAdapter<String> models = new ArrayAdapter<String>(this.getContext(),
-                android.R.layout.simple_dropdown_item_1line, MODELS);
+        models = new ArrayAdapter<String>(this.getContext(),
+                android.R.layout.simple_dropdown_item_1line, modelsStringArray);
+
         deviceBrandEditText.setAdapter(brands);
+        deviceBrandEditText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if(brandsAndDevices != null && i < brandsAndDevices.length()){
+                    try {
+                        JSONArray modelsArray = brandsAndDevices.getJSONObject(i).getJSONArray("models");
+                        int length = modelsArray.length();
+                        if (length > 0) {
+                            models.clear();
+                            for (int j = 0; i < length; i++) { ;
+                                models.add(modelsArray.getString(i));
+                            }
+                           models.notifyDataSetChanged();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
         deviceModelEditText.setAdapter(models);
 
         personNumberEditText.setText(String.valueOf(row.getPersonNumber()));
@@ -180,6 +210,26 @@ public class PDVRowDetailFragment extends Fragment {
             int spinnerPosition = adapter.getPosition(row.getPlanRating());
             planRatingSpinner.setSelection(spinnerPosition);
         }
+        RequestManager.getInstance().getDevicesAndBrands(new RequestManager.JSONArrayCallbackListener() {
+            @Override
+            public void onSuccess(JSONArray response) {
+                brandsAndDevices = response;
+                brands.clear();
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        brands.add(response.getJSONObject(i).getString("brandName"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                brands.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(VolleyError error) {
+                Toast.makeText(PDVRowDetailFragment.this.getContext(),"Error al traer la lista de marcas y modelos",Toast.LENGTH_LONG);
+            }
+        });
 
         Button saveButton = (Button) rootView.findViewById(R.id.save_button);
         saveButton.setOnClickListener(new View.OnClickListener() {

@@ -43,6 +43,7 @@ public class RequestManager {
 
     public static final String LOGIN_SERVICE_URL = "http://simopuve-aldoram5.rhcloud.com/rest/tests/login";
     public static final String PDV_UPLOAD_SERVICE_URL = "http://simopuve-aldoram5.rhcloud.com/rest/tests/survey";
+    public static final String PDV_DEVICES_AND_BRANDS_SERVICE_URL = "http://simopuve-aldoram5.rhcloud.com/rest/tests/brandDevices";
 
     ///Volley required
     private RequestQueue rq;
@@ -87,6 +88,26 @@ public class RequestManager {
 
     public ImageLoader getImageLoader() {
         return mImageLoader;
+    }
+
+    public void getDevicesAndBrands( final JSONArrayCallbackListener listener){
+        JsonArrayRequest arrayRequest = new JsonArrayRequest(PDV_DEVICES_AND_BRANDS_SERVICE_URL, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                Log.d(TAG, response.toString());
+                listener.onSuccess(response);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG,error.toString());
+                listener.onFailure(error);
+
+            }
+        });
+        rq.add(arrayRequest);
+
     }
 
     public void authenticateUser(final String userName,final  String password, final JSONObjectCallbackListener listener){
