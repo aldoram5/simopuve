@@ -322,6 +322,7 @@ public class PDVRowListActivity extends AppCompatActivity {
     }
 
     public void shouldNotifyDatasetChanged(){
+        survey.getRows().clear();
         RealmResults<PDVRow> all = realm.where(PDVRow.class).equalTo("rowNumber",position).findAll();
         if(!all.isEmpty()){
             RealmList rows = survey.getRows();

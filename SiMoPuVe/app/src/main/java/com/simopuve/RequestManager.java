@@ -41,9 +41,13 @@ public class RequestManager {
     public static final String SIMOPUVE_AUTHORIZED_USER_AGENT = "SIMOPUVE-USERAGENT-SIMOPUVE";
     private String TAG = RequestManager.class.getSimpleName();
 
-    public static final String LOGIN_SERVICE_URL = "http://simopuve-aldoram5.rhcloud.com/rest/tests/login";
-    public static final String PDV_UPLOAD_SERVICE_URL = "http://simopuve-aldoram5.rhcloud.com/rest/tests/survey";
-    public static final String PDV_DEVICES_AND_BRANDS_SERVICE_URL = "http://simopuve-aldoram5.rhcloud.com/rest/tests/brandDevices";
+    public static final String LOGIN_TEST_SERVICE_URL = "http://simopuve-aldoram5.rhcloud.com/rest/tests/login";
+    public static final String PDV_UPLOAD_TEST_SERVICE_URL = "http://simopuve-aldoram5.rhcloud.com/rest/tests/survey";
+    public static final String PDV_DEVICES_AND_BRANDS_TEST_SERVICE_URL = "http://simopuve-aldoram5.rhcloud.com/rest/tests/brandDevices";
+
+    public static final String LOGIN_SERVICE_URL = "http://drivechile.dynu.net/simopuve/rest/api/login";
+    public static final String PDV_UPLOAD_SERVICE_URL = "http://drivechile.dynu.net/simopuve/rest/api/survey";
+    public static final String PDV_DEVICES_AND_BRANDS_SERVICE_URL = "http://drivechile.dynu.net/simopuve/rest/api/brandDevices";
 
     ///Volley required
     private RequestQueue rq;
@@ -105,7 +109,14 @@ public class RequestManager {
                 listener.onFailure(error);
 
             }
-        });
+        }){
+            @Override
+            public Map<String, String> getHeaders(){
+                Map<String, String> headers = new HashMap<String, String>();
+                headers.put("User-agent", SIMOPUVE_AUTHORIZED_USER_AGENT);
+                return headers;
+            }
+        };
         rq.add(arrayRequest);
 
     }
@@ -127,7 +138,7 @@ public class RequestManager {
             @Override
             public Map<String, String> getHeaders(){
                 Map<String, String> headers = new HashMap<String, String>();
-                String credentials = "5"+userName+".:."+password+"3";
+                String credentials = userName+":"+password;
                 String auth = "Basic "
                         + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
                 headers.put("User-agent", SIMOPUVE_AUTHORIZED_USER_AGENT);
@@ -175,10 +186,10 @@ public class RequestManager {
                 @Override
                 public Map<String, String> getHeaders(){
                     Map<String, String> headers = new HashMap<String, String>();
-                    String credentials = "5"+userName+".:.";
+                    String credentials = userName+":"+userName.hashCode();
                     String auth = "Basic "
                             + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
-                    headers.put("User-agent", "SIMOPUVE-Authorized-Request");
+                    headers.put("User-agent", SIMOPUVE_AUTHORIZED_USER_AGENT);
                     headers.put("Authorization", auth);
                     return headers;
                 }

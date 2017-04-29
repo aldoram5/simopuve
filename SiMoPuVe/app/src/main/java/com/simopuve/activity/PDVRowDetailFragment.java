@@ -64,6 +64,7 @@ public class PDVRowDetailFragment extends Fragment {
     private ArrayAdapter<String> brands;
     private ArrayAdapter<String> models;
     private JSONArray brandsAndDevices = null;
+    private Button saveButton;
 
     private Realm realm;
 
@@ -231,10 +232,11 @@ public class PDVRowDetailFragment extends Fragment {
             }
         });
 
-        Button saveButton = (Button) rootView.findViewById(R.id.save_button);
+        saveButton = (Button) rootView.findViewById(R.id.save_button);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                saveButton.setEnabled(false);
                 validateFieldsAndSaveRow();
             }
         });
@@ -293,6 +295,7 @@ public class PDVRowDetailFragment extends Fragment {
             row.setPortabilityChangeReason(carrierChangeReason);
             if (!getArguments().containsKey("row")){
                 realm.copyToRealm(row);
+                getArguments().putString("row","row");
             }
 
             realm.commitTransaction();
@@ -300,6 +303,7 @@ public class PDVRowDetailFragment extends Fragment {
             if(getActivity() instanceof PDVRowListActivity){
                 ((PDVRowListActivity)getActivity()).shouldNotifyDatasetChanged();
             }
+            saveButton.setEnabled(true);
 
 
         }
