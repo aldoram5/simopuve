@@ -102,7 +102,7 @@ public class PDVRowListActivity extends AppCompatActivity {
 
                 new AlertDialog.Builder(PDVRowListActivity.this)
                         .setTitle("Enviar encuesta")
-                        .setMessage("Una vez enviada la encuesta esta se borrará de la memoria de la aplicación, ¿Desea Continuar?")
+                        .setMessage("¿Esta seguro que desea enviar la encuesta actual?")
                         .setNegativeButton(android.R.string.cancel, null) // dismisses by default
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             @Override public void onClick(DialogInterface dialog, int which) {

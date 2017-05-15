@@ -48,6 +48,11 @@ public class HeaderCreatorActivity extends AppCompatActivity {
             header = Realm.getDefaultInstance().where(PDVHeader.class).equalTo("pointOfSaleName",id).findFirst();
         }else{
             header = new PDVHeader();
+            header.setSurveyDate(new Date());
+            header.setCompleteName(getSharedPreferences("SIMOPUVE", MODE_PRIVATE).getString("completeName","Nombre no registrado"));
+            header.setAddress(getSharedPreferences("SIMOPUVE", MODE_PRIVATE).getString("address",""));
+            header.setComuna(getSharedPreferences("SIMOPUVE", MODE_PRIVATE).getString("comuna",""));
+            header.setPointOfSaleName(getSharedPreferences("SIMOPUVE", MODE_PRIVATE).getString("pointOfSaleName",""));
         }
         pointOfSaleEditText = (EditText) findViewById(R.id.sale_point);
         addressEditText = (EditText) findViewById(R.id.address);
@@ -132,7 +137,7 @@ public class HeaderCreatorActivity extends AppCompatActivity {
             realm.beginTransaction();
             header.setAddress(address);
             header.setComuna(location);
-            header.setCompleteName(getSharedPreferences("SIMOPUVE", MODE_PRIVATE).getString("completeName","Sin Nombre"));
+            header.setCompleteName(getSharedPreferences("SIMOPUVE", MODE_PRIVATE).getString("completeName","Nombre no registrado"));
             header.setNumberOfPeopleAM(Integer.parseInt(peopleAM));
             header.setNumberOfPeoplePM(Integer.parseInt(peoplePM));
             header.setSurveyDate(new Date());

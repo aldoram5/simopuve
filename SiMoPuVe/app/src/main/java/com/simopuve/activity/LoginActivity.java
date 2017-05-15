@@ -125,9 +125,15 @@ public class LoginActivity extends AppCompatActivity  {
                 public void onSuccess(JSONObject response) {
                     try {
                         String completeName = response.getString("completeName");
+                        String pointOfSaleName = response.getString("pointOfSaleName");
+                        String address = response.getString("address");
+                        String comuna = response.getString("comuna");
                         SharedPreferences prefs = getSharedPreferences("SIMOPUVE", MODE_PRIVATE);
                         SharedPreferences.Editor e = prefs.edit();
                         e.putString("completeName", completeName);
+                        e.putString("pointOfSaleName", pointOfSaleName);
+                        e.putString("address", address);
+                        e.putString("comuna", comuna);
                         e.commit();
                     } catch (JSONException e) {
                         e.printStackTrace();

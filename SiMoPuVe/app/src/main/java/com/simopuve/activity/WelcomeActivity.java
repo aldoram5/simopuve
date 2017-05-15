@@ -27,6 +27,8 @@ import com.simopuve.model.PDVSurvey;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import io.realm.Realm;
@@ -58,10 +60,25 @@ public class WelcomeActivity extends AppCompatActivity {
         Realm.init(SIMOPUVEApplication.getAppContext());
         realm = Realm.getDefaultInstance();
         RealmResults<PDVHeader> headersResult = realm.where(PDVHeader.class).findAll();
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(new Date());
+        Calendar cal2 = Calendar.getInstance();
         if(!headersResult.isEmpty()){
             RealmList rows = headers;
             rows.addAll(headersResult);
             headers = rows;
+            for (PDVHeader row : headersResult) {
+                cal2.setTime(row.getSurveyDate());
+                if(cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                        cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)){
+
+                }else{
+                    headers.remove(row);
+                    realm.beginTransaction();
+                    row.deleteFromRealm();
+                    realm.commitTransaction();
+                }
+            }
         }else{
 
             Toast.makeText(this, "No hay encuestas activas en este momento, crea una tocando el boton flotante", Toast.LENGTH_LONG).show();
