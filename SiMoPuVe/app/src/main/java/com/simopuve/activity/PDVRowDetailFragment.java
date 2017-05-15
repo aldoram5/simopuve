@@ -5,6 +5,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,8 @@ import com.simopuve.model.PDVRow;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.util.ArrayList;
+
 import io.realm.Realm;
 
 /**
@@ -48,8 +51,8 @@ public class PDVRowDetailFragment extends Fragment {
     private PDVRow row = null;
 
     private EditText personNumberEditText;
-    private AutoCompleteTextView deviceBrandEditText;
-    private AutoCompleteTextView deviceModelEditText;
+    private Spinner deviceBrandEditText;
+    private Spinner deviceModelEditText;
     private EditText deviceModeEditText;
     private EditText contractTypeEditText;
     private EditText additionalFeaturesEditText;
@@ -101,12 +104,6 @@ public class PDVRowDetailFragment extends Fragment {
         return fragment;
     }
 
-    private String[] brandsStringArray = new String[] {
-            "Motorola", "Nokia", "Apple", "Samsung", "Asus"
-    };
-    private String[] modelsStringArray = new String[] {
-            "moto-g", "moto-x", "moto-z", "moto-a", "moto-e"
-    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -141,8 +138,8 @@ public class PDVRowDetailFragment extends Fragment {
         TextView title = (TextView)rootView.findViewById(R.id.title);
         title.setText(getArguments().containsKey("row") || row.getPersonNumber() > 0 ? "Modificar registro":"Nuevo Registro" );
         personNumberEditText  = (EditText) rootView.findViewById(R.id.person_number);
-        deviceBrandEditText = (AutoCompleteTextView) rootView.findViewById(R.id.device_brand);
-        deviceModelEditText = (AutoCompleteTextView) rootView.findViewById(R.id.device_model);
+        deviceBrandEditText = (Spinner) rootView.findViewById(R.id.brand_spinner);
+        deviceModelEditText = (Spinner) rootView.findViewById(R.id.model_spinner);
         deviceModeEditText = (EditText) rootView.findViewById(R.id.device_mode);
         contractTypeEditText = (EditText) rootView.findViewById(R.id.contract_type);
         additionalFeaturesEditText = (EditText) rootView.findViewById(R.id.additional_features);
@@ -156,13 +153,37 @@ public class PDVRowDetailFragment extends Fragment {
         planRatingSpinner = (Spinner) rootView.findViewById(R.id.rate_plan_spinner);
 
         brands = new ArrayAdapter<String>(this.getContext(),
-                android.R.layout.simple_dropdown_item_1line, brandsStringArray);
+                android.R.layout.simple_dropdown_item_1line, new ArrayList<String>());
 
         models = new ArrayAdapter<String>(this.getContext(),
-                android.R.layout.simple_dropdown_item_1line, modelsStringArray);
+                android.R.layout.simple_dropdown_item_1line,new ArrayList<String>());
+        deviceBrandEditText.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(brandsAndDevices != null && i < brandsAndDevices.length()){
+                    try {
+                        JSONArray modelsArray = brandsAndDevices.getJSONObject(i).getJSONArray("models");
+                        int length = modelsArray.length();
+                        if (length > 0) {
+                            models.clear();
+                            for (int j = 0; j < length; j++) { ;
+                                models.add(modelsArray.getString(j));
+                            }
+                            models.notifyDataSetChanged();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         deviceBrandEditText.setAdapter(brands);
-        deviceBrandEditText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        /*deviceBrandEditText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if(brandsAndDevices != null && i < brandsAndDevices.length()){
@@ -174,19 +195,17 @@ public class PDVRowDetailFragment extends Fragment {
                             for (int j = 0; i < length; i++) { ;
                                 models.add(modelsArray.getString(i));
                             }
-                           models.notifyDataSetChanged();
+                            models.notifyDataSetChanged();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
             }
-        });
+        });*/
         deviceModelEditText.setAdapter(models);
 
         personNumberEditText.setText(String.valueOf(row.getPersonNumber()));
-        deviceBrandEditText.setText(row.getDeviceBrand());
-        deviceModelEditText.setText(row.getDeviceModel());
         deviceModeEditText.setText(row.getDeviceMode());
         contractTypeEditText.setText(row.getContractType());
         additionalFeaturesEditText.setText(row.getAdditionalCharacteristics());
@@ -211,6 +230,8 @@ public class PDVRowDetailFragment extends Fragment {
             int spinnerPosition = adapter.getPosition(row.getPlanRating());
             planRatingSpinner.setSelection(spinnerPosition);
         }
+        deviceBrandEditText.setAdapter(brands);
+        deviceModelEditText.setAdapter(models);
         RequestManager.getInstance().getDevicesAndBrands(new RequestManager.JSONArrayCallbackListener() {
             @Override
             public void onSuccess(JSONArray response) {
@@ -224,6 +245,32 @@ public class PDVRowDetailFragment extends Fragment {
                     }
                 }
                 brands.notifyDataSetChanged();
+                if(!row.getDeviceBrand().contentEquals("")){
+                    int spinnerPosition = brands.getPosition(row.getDeviceBrand());
+                    if(spinnerPosition !=-1 )spinnerPosition = brands.getPosition("OTROS");
+                    deviceBrandEditText.setSelection(spinnerPosition);
+                    if(!row.getDeviceModel().contentEquals("")){
+                        JSONArray modelsArray = null;
+                        try {
+                            modelsArray = brandsAndDevices.getJSONObject(spinnerPosition).getJSONArray("models");
+                            int length = modelsArray.length();
+                            if (length > 0) {
+                                models.clear();
+                                for (int j = 0; j < length; j++) { ;
+                                    models.add(modelsArray.getString(j));
+                                }
+                                models.notifyDataSetChanged();
+                                spinnerPosition = models.getPosition(row.getDeviceBrand());
+                                if(spinnerPosition !=-1 )spinnerPosition = models.getPosition("OTROS");
+                                deviceModelEditText.setSelection(spinnerPosition);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+
+                }
             }
 
             @Override
@@ -249,8 +296,8 @@ public class PDVRowDetailFragment extends Fragment {
         View focusView = null;
 
         String personNumber = personNumberEditText.getText().toString();
-        String deviceBrand = deviceBrandEditText.getText().toString();
-        String deviceModel = deviceModelEditText.getText().toString();
+        String deviceBrand = deviceBrandEditText.getSelectedItem().toString();
+        String deviceModel = deviceModelEditText.getSelectedItem().toString();
         String deviceMode = deviceModeEditText.getText().toString();
         String contractType = contractTypeEditText.getText().toString();
         String additionalFeatures = additionalFeaturesEditText.getText().toString();

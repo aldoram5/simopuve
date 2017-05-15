@@ -47,6 +47,7 @@
     <string name="add_person">Agregar persona</string>
     <string name="edit_people_info">Editar información</string>
     <string name="create_survey">Crear Encuesta</string>
+    <string name="extra_info">Observaciones</string>
     <string-array name="rating_options">
         <item>NO APLICA</item>
         <item>NO CONTESTA ENCUESTA</item>
