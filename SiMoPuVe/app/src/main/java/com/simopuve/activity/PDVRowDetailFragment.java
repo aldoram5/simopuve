@@ -336,7 +336,7 @@ public class PDVRowDetailFragment extends Fragment {
             row.setDeviceMode(deviceMode);
             row.setDeviceModel(deviceModel);
             row.setDeviceRating(deviceRating);
-            row.setExpressRefillValue(Integer.parseInt(personNumber));
+            row.setExpressRefillValue(Integer.parseInt(realoadValue));
             row.setPersonNumber(Integer.parseInt(personNumber));
             row.setPortabilityChange(carrierChangedFromTo);
             row.setPortabilityChangeReason(carrierChangeReason);

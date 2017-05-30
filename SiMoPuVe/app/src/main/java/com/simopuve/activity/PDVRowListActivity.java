@@ -67,6 +67,8 @@ public class PDVRowListActivity extends AppCompatActivity {
     private EditText peopleWithBagsEditText;
     private EditText peopleDeclinedEditText;
 
+    private boolean notFromRealmFlag = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +85,8 @@ public class PDVRowListActivity extends AppCompatActivity {
         PDVHeader first = realm.where(PDVHeader.class).equalTo("pointOfSaleName",getIntent().getStringExtra("pointOfSale")).findFirst();
         if(first != null){
             survey.setHeader(first);
+        }else{
+            notFromRealmFlag = true;
         }
         position = getIntent().getIntExtra("position", 0);
         RealmResults<PDVRow> all = realm.where(PDVRow.class).equalTo("rowNumber",position).findAll();
@@ -108,7 +112,7 @@ public class PDVRowListActivity extends AppCompatActivity {
                             @Override public void onClick(DialogInterface dialog, int which) {
                                 // do the acknowledged action, beware, this is run on UI thread
 
-                                PDVHeader header = realm.copyFromRealm(survey.getHeader());
+                                PDVHeader header = notFromRealmFlag ? survey.getHeader() : realm.copyFromRealm(survey.getHeader());
                                 RealmList<PDVRow> list = new RealmList<>();
                                 for (int i = 0; i < survey.getRows().size(); i++) {
                                     list.add((PDVRow) realm.copyFromRealm(survey.getRows().get(i)));
