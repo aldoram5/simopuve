@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -319,6 +320,13 @@ public class PDVRowListActivity extends AppCompatActivity {
         }
     }
 
+    public void removeFragment(Fragment fragment){
+        if(fragment instanceof PDVRowDetailFragment){
+            getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+            shouldNotifyDatasetChanged();
+        }
+
+    }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         adapter = new PDVRowViewAdapter(survey.getRows());

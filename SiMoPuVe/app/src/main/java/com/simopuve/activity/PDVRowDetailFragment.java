@@ -31,6 +31,7 @@ import org.json.JSONException;
 import java.util.ArrayList;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * A fragment representing a single PDVRow detail screen.
@@ -68,6 +69,7 @@ public class PDVRowDetailFragment extends Fragment {
     private ArrayAdapter<String> models;
     private JSONArray brandsAndDevices = null;
     private Button saveButton;
+    private Button deleteButton;
 
     private Realm realm;
 
@@ -126,7 +128,9 @@ public class PDVRowDetailFragment extends Fragment {
             }
         }else if (row == null){
             row = new PDVRow();
-            row.setPersonNumber((int) (realm.where(PDVRow.class).equalTo("rowNumber",position).count() + 1));
+            RealmResults<PDVRow> rows = realm.where(PDVRow.class).equalTo("rowNumber", position).findAll();
+            row.setPersonNumber((int) (rows.size() > 0 ? rows.last().getPersonNumber() + 1 : 1));
+            this.rowNumber = row.getPersonNumber();
         }
     }
 
@@ -136,7 +140,7 @@ public class PDVRowDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.pdvrow_detail, container, false);
 
         TextView title = (TextView)rootView.findViewById(R.id.title);
-        title.setText(getArguments().containsKey("row") || row.getPersonNumber() > 0 ? "Modificar registro":"Nuevo Registro" );
+        title.setText(getArguments().containsKey("rowNumber") ? "Modificar registro":"Nuevo Registro" );
         personNumberEditText  = (EditText) rootView.findViewById(R.id.person_number);
         deviceBrandEditText = (Spinner) rootView.findViewById(R.id.brand_spinner);
         deviceModelEditText = (Spinner) rootView.findViewById(R.id.model_spinner);
@@ -247,7 +251,7 @@ public class PDVRowDetailFragment extends Fragment {
                 brands.notifyDataSetChanged();
                 if(!row.getDeviceBrand().contentEquals("")){
                     int spinnerPosition = brands.getPosition(row.getDeviceBrand());
-                    if(spinnerPosition !=-1 )spinnerPosition = brands.getPosition("OTROS");
+                    if(spinnerPosition == -1 )spinnerPosition = brands.getPosition("OTROS");
                     deviceBrandEditText.setSelection(spinnerPosition);
                     if(!row.getDeviceModel().contentEquals("")){
                         JSONArray modelsArray = null;
@@ -260,8 +264,8 @@ public class PDVRowDetailFragment extends Fragment {
                                     models.add(modelsArray.getString(j));
                                 }
                                 models.notifyDataSetChanged();
-                                spinnerPosition = models.getPosition(row.getDeviceBrand());
-                                if(spinnerPosition !=-1 )spinnerPosition = models.getPosition("OTROS");
+                                spinnerPosition = models.getPosition(row.getDeviceModel());
+                                if(spinnerPosition == -1 )spinnerPosition = models.getPosition("OTROS");
                                 deviceModelEditText.setSelection(spinnerPosition);
                             }
                         } catch (JSONException e) {
@@ -284,10 +288,42 @@ public class PDVRowDetailFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 saveButton.setEnabled(false);
+                deleteButton.setEnabled(false);
                 validateFieldsAndSaveRow();
             }
         });
+        deleteButton = (Button) rootView.findViewById(R.id.delete_button);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteButton.setEnabled(false);
+                saveButton.setEnabled(false);
+                deleteOrCloseFragment();
+            }
+        });
         return rootView;
+    }
+
+    void deleteOrCloseFragment(){
+        if (getArguments().containsKey("rowNumber")){
+            realm.beginTransaction();
+            PDVRow temp = realm.where(PDVRow.class).equalTo("personNumber", row.getPersonNumber()).findFirst();
+            if(temp != null){
+                temp.deleteFromRealm();
+                int i = 1;
+                for (PDVRow pdvRow : realm.where(PDVRow.class).equalTo("rowNumber", position).findAll()) {
+                    pdvRow.setPersonNumber(i);
+                    i++;
+                }
+            }
+            realm.commitTransaction();
+        }
+        if(getActivity() instanceof PDVRowListActivity){
+            PDVRowListActivity listActivity = (PDVRowListActivity) getActivity();
+            listActivity.removeFragment(this);
+        }else {
+            getActivity().finish();
+        }
     }
 
     void validateFieldsAndSaveRow(){
@@ -343,6 +379,7 @@ public class PDVRowDetailFragment extends Fragment {
             if (!getArguments().containsKey("row")){
                 realm.copyToRealm(row);
                 getArguments().putString("row","row");
+                getArguments().putInt("rowNumber",rowNumber);
             }
 
             realm.commitTransaction();
@@ -351,6 +388,7 @@ public class PDVRowDetailFragment extends Fragment {
                 ((PDVRowListActivity)getActivity()).shouldNotifyDatasetChanged();
             }
             saveButton.setEnabled(true);
+            deleteButton.setEnabled(true);
 
 
         }

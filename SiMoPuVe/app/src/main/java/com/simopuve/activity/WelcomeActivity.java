@@ -67,6 +67,7 @@ public class WelcomeActivity extends AppCompatActivity {
             RealmList rows = headers;
             rows.addAll(headersResult);
             headers = rows;
+            int i = 0;
             for (PDVHeader row : headersResult) {
                 cal2.setTime(row.getSurveyDate());
                 if(cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
@@ -74,11 +75,15 @@ public class WelcomeActivity extends AppCompatActivity {
 
                 }else{
                     headers.remove(row);
+                    RealmResults<PDVRow> all = realm.where(PDVRow.class).equalTo("rowNumber",i).findAll();
                     realm.beginTransaction();
+                    all.deleteAllFromRealm();
                     row.deleteFromRealm();
                     realm.commitTransaction();
                 }
+                i++;
             }
+
         }else{
 
             Toast.makeText(this, "No hay encuestas activas en este momento, crea una tocando el boton flotante", Toast.LENGTH_LONG).show();
