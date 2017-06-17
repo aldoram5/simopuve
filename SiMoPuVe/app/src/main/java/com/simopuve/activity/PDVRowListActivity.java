@@ -1,10 +1,17 @@
 package com.simopuve.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -33,8 +40,12 @@ import com.simopuve.model.PDVHeader;
 import com.simopuve.model.PDVRow;
 import com.simopuve.model.PDVSurvey;
 
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONObject;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +62,9 @@ import io.realm.RealmResults;
  * item details side-by-side using two vertical panes.
  */
 public class PDVRowListActivity extends AppCompatActivity {
+
+    private static final long LOCATION_REFRESH_TIME = 12000;//mins
+    private static final float LOCATION_REFRESH_DISTANCE = 2;//meters
 
     private String TAG = PDVRowListActivity.class.getSimpleName();
     /**
@@ -70,11 +84,53 @@ public class PDVRowListActivity extends AppCompatActivity {
 
     private boolean notFromRealmFlag = false;
 
+    //Websocket Monitor
+    private WebSocketClient mWebSocketClient;
+
+    private final LocationListener mLocationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(final Location location) {
+            sendMessage(location);
+        }
+
+        @Override
+        public void onProviderEnabled(String s) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String s) {
+
+        }
+
+        @Override
+        public void onStatusChanged(String s, int i, Bundle bundle) {
+
+        }
+    };
+    private LocationManager mLocationManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pdvrow_list);
 
+
+        mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_REFRESH_TIME,
+                LOCATION_REFRESH_DISTANCE, mLocationListener);
+        connectWebSocket();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -345,6 +401,7 @@ public class PDVRowListActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
+    //ViewAdapter
     public class PDVRowViewAdapter
             extends RecyclerView.Adapter<PDVRowViewAdapter.ViewHolder> {
 
@@ -414,5 +471,48 @@ public class PDVRowListActivity extends AppCompatActivity {
                 return super.toString() + " '" + mContentView.getText() + "'";
             }
         }
+    }
+
+
+    //WebSocket monitor
+
+    private void connectWebSocket() {
+        URI uri;
+        try {
+            uri = new URI("ws://drivechile.dynu.net/simopuve/monitor");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        mWebSocketClient = new WebSocketClient(uri) {
+            @Override
+            public void onOpen(ServerHandshake serverHandshake) {
+                Log.i("Websocket", "Opened");
+                //mWebSocketClient.send("Hello from " + Build.MANUFACTURER + " " + Build.MODEL);
+            }
+
+            @Override
+            public void onMessage(String s) {
+
+            }
+
+            @Override
+            public void onClose(int i, String s, boolean b) {
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.wtf(TAG,"Error: " + e.getMessage());
+            }
+        };
+        mWebSocketClient.connect();
+    }
+
+    public void sendMessage(Location location) {
+        Log.d(TAG,"Location: " + location.getLongitude() + " " + location.getLatitude());
+        if(mWebSocketClient!= null)
+        mWebSocketClient.send(getSharedPreferences("SIMOPUVE", MODE_PRIVATE).getString("completeName","Sin Nombre") + "|" + survey.getHeader().getPointOfSaleName() + "|"
+                +location.getLatitude()+"|"+location.getLongitude() + "| " );
     }
 }
