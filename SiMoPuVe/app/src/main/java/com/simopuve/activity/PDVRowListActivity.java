@@ -233,7 +233,11 @@ public class PDVRowListActivity extends AppCompatActivity {
                 @Override
                 public void afterTextChanged(Editable editable) {
                     realm.beginTransaction();
-                    survey.getHeader().setNumberOfPeopleAM(Integer.parseInt(peopleAMEditText.getText().toString()));
+                    if(peopleAMEditText.getText().toString().isEmpty()){
+                        survey.getHeader().setNumberOfPeopleAM(0);
+                    }else{
+                        survey.getHeader().setNumberOfPeopleAM(Integer.parseInt(peopleAMEditText.getText().toString()));
+                    }
                     realm.commitTransaction();
                 }
             });
@@ -251,10 +255,15 @@ public class PDVRowListActivity extends AppCompatActivity {
                 @Override
                 public void afterTextChanged(Editable editable) {
                     realm.beginTransaction();
-                    survey.getHeader().setNumberOfPeoplePM(Integer.parseInt(peoplePMEditText.getText().toString()));
+                    if(peoplePMEditText.getText().toString().isEmpty()){
+                        survey.getHeader().setNumberOfPeoplePM(0);
+                    }else{
+                        survey.getHeader().setNumberOfPeoplePM(Integer.parseInt(peoplePMEditText.getText().toString()));
+                    }
                     realm.commitTransaction();
                 }
             });
+
             peopleDeclinedEditText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -269,7 +278,11 @@ public class PDVRowListActivity extends AppCompatActivity {
                 @Override
                 public void afterTextChanged(Editable editable) {
                     realm.beginTransaction();
-                    survey.getHeader().setNumberOfPeopleDidNotAnswer(Integer.parseInt(peopleDeclinedEditText.getText().toString()));
+                    if(peopleDeclinedEditText.getText().toString().isEmpty()){
+                        survey.getHeader().setNumberOfPeopleDidNotAnswer(0);
+                    }else{
+                        survey.getHeader().setNumberOfPeopleDidNotAnswer(Integer.parseInt(peopleDeclinedEditText.getText().toString()));
+                    }
                     realm.commitTransaction();
                 }
             });
@@ -287,7 +300,11 @@ public class PDVRowListActivity extends AppCompatActivity {
                 @Override
                 public void afterTextChanged(Editable editable) {
                     realm.beginTransaction();
-                    survey.getHeader().setPeopleWithBags(Integer.parseInt(peopleWithBagsEditText.getText().toString()));
+                    if(peopleWithBagsEditText.getText().toString().isEmpty()){
+                        survey.getHeader().setPeopleWithBags(0);
+                    }else{
+                        survey.getHeader().setPeopleWithBags(Integer.parseInt(peopleWithBagsEditText.getText().toString()));
+                    }
                     realm.commitTransaction();
                 }
             });
