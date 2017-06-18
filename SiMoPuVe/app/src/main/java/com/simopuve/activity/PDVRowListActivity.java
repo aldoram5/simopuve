@@ -40,6 +40,7 @@ import com.simopuve.model.PDVHeader;
 import com.simopuve.model.PDVRow;
 import com.simopuve.model.PDVSurvey;
 
+import org.java_websocket.WebSocket;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONObject;
@@ -343,6 +344,7 @@ public class PDVRowListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if(realm != null){
         RealmResults<PDVRow> all = realm.where(PDVRow.class).equalTo("rowNumber",position).findAll();
         if(!all.isEmpty()){
             survey.getRows().clear();
@@ -352,6 +354,7 @@ public class PDVRowListActivity extends AppCompatActivity {
 
         }
         adapter.notifyDataSetChanged();
+        }
 
     }
 
@@ -528,7 +531,7 @@ public class PDVRowListActivity extends AppCompatActivity {
 
     public void sendMessage(Location location) {
         Log.d(TAG,"Location: " + location.getLongitude() + " " + location.getLatitude());
-        if(mWebSocketClient!= null)
+        if(mWebSocketClient!= null && mWebSocketClient.getReadyState() == WebSocket.READYSTATE.OPEN)
         mWebSocketClient.send(getSharedPreferences("SIMOPUVE", MODE_PRIVATE).getString("completeName","Sin Nombre") + "|" + survey.getHeader().getPointOfSaleName() + "|"
                 +location.getLatitude()+"|"+location.getLongitude() + "| " );
     }
